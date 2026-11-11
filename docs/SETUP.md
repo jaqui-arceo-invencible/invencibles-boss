@@ -14,10 +14,10 @@
 6. `npm run lint`, `npm run typecheck` y `npm run build` verifican calidad/build.
 
 ## Publicación
-Conecta el repo desde Netlify → Add new site → Import from Git. Selecciona `main`. Netlify detecta Next.js; no es necesario fijar un adaptador si la detección automática funciona. En Site configuration → Environment variables añade `NEXT_PUBLIC_SUPABASE_URL` y `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` para los contextos necesarios y vuelve a desplegar.
+El sitio Netlify importa el repositorio privado desde GitHub y publica `main`. Netlify detectó Next.js y usó su runtime oficial; el build command es `npm run build` y el script invoca `next build --webpack`. Las variables `NEXT_PUBLIC_SUPABASE_URL` y `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` se guardan en el gestor de variables de Netlify. Son la URL y la clave publishable; nunca guardar claves `secret`/service-role ahí como variables `NEXT_PUBLIC_`.
 
 ## Acceso y correo
-No habilites registro público definitivo. Antes de fase de invitaciones de producción configura SMTP confiable, redirect URLs exactas en Auth, URL de sitio y plantillas en Supabase. No envíes pruebas a socias sin consentimiento. Nunca compartas una contraseña de base de datos, token SMTP o clave service-role en chat, commits o cliente web.
+El Site URL de Supabase Auth está configurado como `https://invencibles-boss.netlify.app`. La allowlist incluye `http://localhost:3000/**` y `https://invencibles-boss.netlify.app/**`. El registro público está desactivado. Antes de la fase de invitaciones configura SMTP confiable y plantillas en Supabase. No envíes pruebas a socias sin consentimiento. Nunca compartas una contraseña de base de datos, token SMTP o clave service-role en chat, commits o cliente web.
 
 ## Estado de cuentas
 Se creó la organización gratuita `Invencibles Boss` y el proyecto `invencibles-boss` en Supabase. Proyecto: [abrir dashboard](https://supabase.com/dashboard/project/qqhyqkklvlngcbyjdwfb). URL del proyecto: `https://qqhyqkklvlngcbyjdwfb.supabase.co`. La instancia está saludable en `us-east-2` (Ohio), plan Nano/Free. La exposición automática de tablas se dejó desactivada y el auto-RLS activado al crearla.
@@ -28,4 +28,6 @@ Supabase Auth tiene habilitado el proveedor Email y la confirmación de correo. 
 
 GitHub creó el repositorio privado [`jaqui-arceo-invencible/invencibles-boss`](https://github.com/jaqui-arceo-invencible/invencibles-boss). `main` ya está publicado y sigue el remoto `origin/main`. GitHub CLI se autenticó mediante OAuth para `jaqui-arceo-invencible`; Git usa HTTPS y la credencial está en el llavero del sistema (no en el repo ni en `.env.local`).
 
-Netlify todavía no está vinculado y no se ha verificado un deploy. Después de publicar `main`, importar el repositorio en Netlify y añadir `NEXT_PUBLIC_SUPABASE_URL` y `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` en su gestor de variables.
+Netlify está vinculado al repo privado en el equipo `Invencibles Boss`: [abrir proyecto](https://app.netlify.com/projects/invencibles-boss). Primer deploy exitoso desde `main` en `b547d18`; [sitio](https://invencibles-boss.netlify.app). El deploy se construyó con el runtime Next.js de Netlify y publicó una función. Los dos valores públicos de Supabase están configurados en las variables del sitio.
+
+Netlify mantiene el sitio como **Private**. Conviene dejarlo así mientras el portal sigue siendo un shell demostrativo: la autenticación, las rutas protegidas y RLS todavía no están implementadas. No compartir datos reales ni abrir el sitio al público hasta completar la Fase 1.

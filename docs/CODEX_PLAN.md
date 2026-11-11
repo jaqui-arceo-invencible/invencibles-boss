@@ -15,16 +15,17 @@ Next.js App Router + TypeScript estricto + Tailwind/shadcn/ui. Supabase Auth con
 - [x] Crear repositorio privado `invencibles-boss` en `jaqui-arceo-invencible`; commits locales en `main`.
 - [x] Crear Supabase `invencibles-boss`, conectar sus credenciales públicas en `.env.local` y configurar Auth con correo verificado y registro público desactivado.
 - [x] Autenticar GitHub CLI mediante OAuth y publicar `main` en el repositorio privado.
-- [ ] Conectar sitio Netlify a GitHub, configurar variables y verificar deploy.
+- [x] Conectar Netlify al repo privado, configurar variables públicas de Supabase y publicar con el runtime Next.js.
+- [x] Definir Site URL y allowlist de redirect URLs en Supabase Auth para producción y desarrollo local.
 
-> Validación: `npm run typecheck`, `npm run lint` y `npm run build` pasan. El script de build usa Webpack porque Turbopack no puede iniciar su proceso auxiliar en este entorno. El repo privado `origin/main` está publicado. Supabase está saludable en `us-east-2` (Ohio), plan Nano/Free, con exposición automática de tablas desactivada y auto-RLS activado. Auth tiene Email habilitado, confirmación de correo activa y registro público desactivado. No hay tablas productivas, usuarios ni invitaciones.
+> Validación: `npm run typecheck`, `npm run lint` y `npm run build` pasan localmente. Netlify completó el primer deploy de `main` (`b547d18`) y su runtime Next.js publicó una función sin errores. El repo privado `origin/main` está conectado con auto publishing activo. Supabase está saludable en `us-east-2` (Ohio), plan Nano/Free, con exposición automática de tablas desactivada y auto-RLS activado. Auth tiene Email habilitado, confirmación de correo activa, registro público desactivado, Site URL de producción y allowlist para producción/local. No hay tablas productivas, usuarios ni invitaciones. El sitio Netlify sigue privado porque el shell todavía no tiene autenticación ni rutas protegidas.
 
 ## Fases y aceptación
 
 ### Fase 0 — Infraestructura y shell (actual)
 Tareas: bootstrap, navegación base responsive para socias/administración, dependencias esenciales, documentación, repo privado, Supabase, Netlify.
 Aceptación: `npm run typecheck`, lint y build pasan; repo privado actualizado en GitHub; entorno Supabase enlazado; deploy Netlify automático desde `main` accesible sin errores.
-Dependencias: autenticación GitHub de terminal/cliente para el push; publicar el repo para importarlo en Netlify; configuración segura de claves públicas.
+Dependencias: resueltas para crear el primer deploy. Antes de abrirlo al público se requiere implementar autenticación y rutas protegidas en la Fase 1.
 
 ### Fase 1 — Acceso privado e invitaciones
 Tareas: perfiles, equipos y membresías; política de registro cerrado; invitación con expiración/uso único; recuperación; checks de rol server-side; RLS; pruebas con cuentas internas. Configurar SMTP antes de enviar invitaciones externas.
@@ -59,5 +60,6 @@ Fase 0 → Fase 1 → Fase 2 → Fase 3. Fase 4 depende de identidad, membresía
 - Sin npm y cuentas cloud verificadas, el primer deploy no es comprobable.
 
 ## Próxima tarea recomendada
-1. Importar el repo privado en Netlify, publicar desde `main`, añadir URL y clave publishable de Supabase y verificar el deploy.
-4. Actualizar esta lista con los IDs y estados reales antes de iniciar Fase 1.
+1. Iniciar Fase 1: implementar autenticación SSR, perfiles, equipos/membresías, roles, invitaciones seguras, protección server-side y RLS.
+2. Configurar SMTP antes de enviar invitaciones reales y probar el acceso con cuentas internas.
+3. Mantener el sitio Netlify privado hasta validar la autenticación y las políticas.

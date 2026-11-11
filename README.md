@@ -29,4 +29,4 @@ Scripts: `npm run dev`, `npm run lint`, `npm run typecheck`, `npm run build`.
 - [Instrucciones permanentes para agentes](AGENTS.md)
 
 ## Estado de esta entrega
-Existe un shell demostrativo para el portal y la administración. Aún no hay inicio de sesión, protección real de rutas ni datos conectados; nombres, avances y eventos son contenido de ejemplo. El repositorio remoto está creado, pero el código solo está confirmado localmente hasta completar el push autenticado.
+Existe un shell demostrativo para el portal y la administración. El primer deploy está disponible en [invencibles-boss.netlify.app](https://invencibles-boss.netlify.app) y el [repositorio privado](https://github.com/jaqui-arceo-invencible/invencibles-boss) despliega desde `main`. Aún no hay inicio de sesión, protección real de rutas ni datos conectados; nombres, avances y eventos son contenido de ejemplo. El sitio está configurado como privado hasta completar la Fase 1 de seguridad.
