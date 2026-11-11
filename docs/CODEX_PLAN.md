@@ -12,19 +12,19 @@ Next.js App Router + TypeScript estricto + Tailwind/shadcn/ui. Supabase Auth con
 - [x] Crear scaffold inicial de Next.js y estructura de documentación/configuración.
 - [x] Instalar Next.js, shadcn Sidebar/Card/Sheet, Lucide React y Supabase SSR/JS; terminar shell responsive.
 - [x] Ejecutar typecheck y lint. Build validado con `next build --webpack`.
-- [x] Crear repositorio privado `invencibles-boss` en `jaqui-arceo-invencible` y commit inicial local (`8b129a4`).
-- [ ] Publicar el commit inicial en GitHub.
-- [ ] Crear proyecto Supabase Cloud y guardar URL/clave pública en entorno seguro.
+- [x] Crear repositorio privado `invencibles-boss` en `jaqui-arceo-invencible` y commit inicial local (`577533c`).
+- [ ] Publicar el commit inicial en GitHub (push HTTPS devuelve `Repository not found` desde la terminal no autenticada; el repo privado sí aparece en la sesión web).
+- [ ] Completar proyecto Supabase Cloud y guardar URL/clave pública en entorno seguro.
 - [ ] Conectar sitio Netlify a GitHub, configurar variables y verificar deploy.
 
-> Validación: `npm run typecheck` y `npm run lint` pasan; el script `npm run build` usa Webpack porque el proceso auxiliar de Turbopack está bloqueado por las restricciones del entorno. GitHub confirmó la creación del repositorio privado. Supabase muestra el formulario para crear la organización `Invencibles Boss` en plan Free, pero el envío sigue pendiente/verificando.
+> Validación: `npm run typecheck`, `npm run lint` y `npm run build` pasan. El script de build usa Webpack porque Turbopack no puede iniciar su proceso auxiliar en este entorno. GitHub confirmó la creación del repositorio privado. Supabase confirmó la organización `Invencibles Boss` en Free; el proyecto `invencibles-boss` quedó preconfigurado (región general Americas, exposición automática de tablas desactivada y auto-RLS activado), pero espera que la persona propietaria escriba su contraseña de Postgres y lo cree. No hay tablas productivas ni invitaciones enviadas.
 
 ## Fases y aceptación
 
 ### Fase 0 — Infraestructura y shell (actual)
 Tareas: bootstrap, navegación base responsive para socias/administración, dependencias esenciales, documentación, repo privado, Supabase, Netlify.
 Aceptación: `npm run typecheck`, lint y build pasan; repo privado con commit limpio; entorno Supabase enlazado; deploy Netlify automático desde `main` accesible sin errores.
-Dependencias: acceso a cuentas GitHub, Supabase y Netlify; DNS/red npm; configuración segura de secretos.
+Dependencias: acceso autenticado a GitHub para el push; contraseña de DB introducida por la persona propietaria en Supabase; push del repo para importar en Netlify; configuración segura de claves públicas.
 
 ### Fase 1 — Acceso privado e invitaciones
 Tareas: perfiles, equipos y membresías; política de registro cerrado; invitación con expiración/uso único; recuperación; checks de rol server-side; RLS; pruebas con cuentas internas. Configurar SMTP antes de enviar invitaciones externas.
@@ -59,4 +59,7 @@ Fase 0 → Fase 1 → Fase 2 → Fase 3. Fase 4 depende de identidad, membresía
 - Sin npm y cuentas cloud verificadas, el primer deploy no es comprobable.
 
 ## Próxima tarea recomendada
-Publicar el commit inicial en GitHub, completar el proyecto Supabase y desplegar en Netlify. La creación de Supabase requerirá una contraseña de base de datos; por seguridad, la persona propietaria debe escribirla directamente en el formulario del proveedor.
+1. Completar el proyecto Supabase desde el formulario preparado escribiendo ahí una contraseña nueva de Postgres (no compartirla por chat).
+2. Conectar GitHub Desktop o la autenticación de Git y publicar el commit `577533c` en `main`.
+3. Importar el repo en Netlify, añadir URL y clave publishable desde Supabase y verificar el deploy.
+4. Actualizar esta lista con los IDs y estados reales antes de iniciar Fase 1.

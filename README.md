@@ -28,4 +28,5 @@ Scripts: `npm run dev`, `npm run lint`, `npm run typecheck`, `npm run build`.
 - [Configuración para el equipo](docs/SETUP.md)
 - [Instrucciones permanentes para agentes](AGENTS.md)
 
-La infraestructura externa (GitHub, Supabase y Netlify) se marca como pendiente hasta verificar su creación y conexión.
+## Estado de esta entrega
+Existe un shell demostrativo para el portal y la administración. Aún no hay inicio de sesión, protección real de rutas ni datos conectados; nombres, avances y eventos son contenido de ejemplo. El repositorio remoto está creado, pero el código solo está confirmado localmente hasta completar el push autenticado.
