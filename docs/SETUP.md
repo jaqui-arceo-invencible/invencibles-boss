@@ -26,6 +26,6 @@ La clave publishable está configurada en `.env.local`, excluido de Git. No se g
 
 Supabase Auth tiene habilitado el proveedor Email y la confirmación de correo. El registro de usuarios nuevos está desactivado, el proyecto no tiene usuarios y no se enviaron invitaciones. No se han creado tablas ni políticas productivas.
 
-GitHub creó el repositorio privado [`jaqui-arceo-invencible/invencibles-boss`](https://github.com/jaqui-arceo-invencible/invencibles-boss). El historial y los commits están localmente en `main`; el push desde esta terminal no está autenticado y devuelve `Repository not found`, aunque el repo sí aparece en la sesión web. Publicar `main` desde un cliente Git autenticado.
+GitHub creó el repositorio privado [`jaqui-arceo-invencible/invencibles-boss`](https://github.com/jaqui-arceo-invencible/invencibles-boss). `main` ya está publicado y sigue el remoto `origin/main`. GitHub CLI se autenticó mediante OAuth para `jaqui-arceo-invencible`; Git usa HTTPS y la credencial está en el llavero del sistema (no en el repo ni en `.env.local`).
 
 Netlify todavía no está vinculado y no se ha verificado un deploy. Después de publicar `main`, importar el repositorio en Netlify y añadir `NEXT_PUBLIC_SUPABASE_URL` y `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` en su gestor de variables.

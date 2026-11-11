@@ -14,10 +14,10 @@ Next.js App Router + TypeScript estricto + Tailwind/shadcn/ui. Supabase Auth con
 - [x] Ejecutar typecheck y lint. Build validado con `next build --webpack`.
 - [x] Crear repositorio privado `invencibles-boss` en `jaqui-arceo-invencible`; commits locales en `main`.
 - [x] Crear Supabase `invencibles-boss`, conectar sus credenciales públicas en `.env.local` y configurar Auth con correo verificado y registro público desactivado.
-- [ ] Publicar `main` en GitHub (push HTTPS devuelve `Repository not found` desde terminal sin autenticación; el repo privado sí aparece en la sesión web).
+- [x] Autenticar GitHub CLI mediante OAuth y publicar `main` en el repositorio privado.
 - [ ] Conectar sitio Netlify a GitHub, configurar variables y verificar deploy.
 
-> Validación: `npm run typecheck`, `npm run lint` y `npm run build` pasan. El script de build usa Webpack porque Turbopack no puede iniciar su proceso auxiliar en este entorno. El repo es privado. Supabase está saludable en `us-east-2` (Ohio), plan Nano/Free, con exposición automática de tablas desactivada y auto-RLS activado. Auth tiene Email habilitado, confirmación de correo activa y registro público desactivado. No hay tablas productivas, usuarios ni invitaciones.
+> Validación: `npm run typecheck`, `npm run lint` y `npm run build` pasan. El script de build usa Webpack porque Turbopack no puede iniciar su proceso auxiliar en este entorno. El repo privado `origin/main` está publicado. Supabase está saludable en `us-east-2` (Ohio), plan Nano/Free, con exposición automática de tablas desactivada y auto-RLS activado. Auth tiene Email habilitado, confirmación de correo activa y registro público desactivado. No hay tablas productivas, usuarios ni invitaciones.
 
 ## Fases y aceptación
 
@@ -59,6 +59,5 @@ Fase 0 → Fase 1 → Fase 2 → Fase 3. Fase 4 depende de identidad, membresía
 - Sin npm y cuentas cloud verificadas, el primer deploy no es comprobable.
 
 ## Próxima tarea recomendada
-1. Publicar el historial local de `main` en GitHub con un cliente Git autenticado.
-2. Importar el repo en Netlify, añadir URL y clave publishable desde Supabase y verificar el deploy.
+1. Importar el repo privado en Netlify, publicar desde `main`, añadir URL y clave publishable de Supabase y verificar el deploy.
 4. Actualizar esta lista con los IDs y estados reales antes de iniciar Fase 1.
