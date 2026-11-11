@@ -1,32 +1,35 @@
 # Invencibles Boss
 
-Aplicación privada de capacitación y acompañamiento para la comunidad Invencibles Boss. No es una tienda ni un sistema oficial de Farmasi.
+Academia privada de capacitación y acompañamiento para la comunidad Invencibles Boss. No es una tienda ni un sistema oficial de Farmasi.
 
 ## Stack
-Next.js App Router · TypeScript · Tailwind CSS · shadcn/ui · Supabase · Netlify · npm.
+Next.js App Router, TypeScript, Tailwind CSS, shadcn/ui, Supabase Auth/PostgreSQL y pnpm para desarrollo local.
 
-## Requisitos y ejecución
-Se requiere Node.js 20.9 o posterior y npm.
+## Inicio local
+Necesitas Node.js 20.9+ y pnpm.
 
 ```bash
-npm install
+pnpm install
 cp .env.example .env.local
-npm run dev
+pnpm dev
 ```
 
-Define en `.env.local` (no la subas a Git):
+Configura `.env.local` (no se sube a Git):
+- `NEXT_PUBLIC_SUPABASE_URL`
+- `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`
+- `NEXT_PUBLIC_SITE_URL` (local: `http://localhost:3000`)
+- `SUPABASE_SERVICE_ROLE_KEY` (solo servidor; necesaria para acciones administrativas)
 
-- `NEXT_PUBLIC_SUPABASE_URL`: URL del proyecto Supabase.
-- `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`: clave pública/publishable del proyecto.
-
-Scripts: `npm run dev`, `npm run lint`, `npm run typecheck`, `npm run build`.
+Comprobaciones: `pnpm typecheck`, `pnpm lint`, `pnpm build`.
 
 ## Documentación
-- [Plan maestro](docs/CODEX_PLAN.md)
+- [Plan](docs/CODEX_PLAN.md)
 - [Arquitectura](docs/ARCHITECTURE.md)
-- [Catálogo de bibliotecas](docs/UI_LIBRARIES.md)
-- [Configuración para el equipo](docs/SETUP.md)
-- [Instrucciones permanentes para agentes](AGENTS.md)
+- [Setup](docs/SETUP.md)
+- [Autenticación](docs/AUTHENTICATION.md)
+- [Roles y permisos](docs/ROLES_AND_PERMISSIONS.md)
+- [Flujo de invitación](docs/INVITATION_FLOW.md)
+- [Informe de Fase 1](docs/PHASE_1_REPORT.md)
 
-## Estado de esta entrega
-Existe un shell demostrativo para el portal y la administración. El primer deploy está disponible en [invencibles-boss.netlify.app](https://invencibles-boss.netlify.app) y el [repositorio privado](https://github.com/jaqui-arceo-invencible/invencibles-boss) despliega desde `main`. Aún no hay inicio de sesión, protección real de rutas ni datos conectados; nombres, avances y eventos son contenido de ejemplo. El sitio está configurado como privado hasta completar la Fase 1 de seguridad.
+## Estado
+Fase 1 en verificación local. Contiene pantallas y lógica de login, recuperación, aceptación de invitación, onboarding y administración. Antes de usar administración aplica la migración y prepara la primera administradora. No publicar a `main`: Netlify tiene autodeploy activo y la usuaria pidió evitar nuevos despliegues.

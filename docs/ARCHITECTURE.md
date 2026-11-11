@@ -1,42 +1,32 @@
 # Arquitectura técnica
 
 ## Servicios y responsabilidades
-- **Next.js App Router:** páginas, layouts, Server Components, acciones y endpoints.
-- **Supabase Auth:** identidad, verificación de correo, recuperación e invitaciones gestionadas por servidor.
-- **PostgreSQL:** equipos, membresías, contenidos, progreso y conversación; RLS es el límite de autorización.
-- **Storage:** bucket privado para materiales didácticos; objetos ligados a equipo/visibilidad.
-- **Realtime:** habilitar solo para canales concretos de comentarios/comunidad cuando esas funciones se implementen.
-- **GitHub / Netlify:** repositorio privado y builds/deploys automáticos desde `main`.
+- **Next.js App Router:** páginas, layouts, Server Components y Server Actions.
+- **Supabase Auth:** identidad, verificación, invitación y recuperación.
+- **PostgreSQL:** equipos, perfiles, membresías e invitaciones. RLS limita datos por usuaria, rol y equipo.
+- **Storage / Realtime:** permanecen para fases posteriores; sus políticas se crearán junto con los recursos y tablas.
+- **GitHub / Netlify:** código privado y hosting previo. Netlify sigue con autodeploy en `main`, pero por indicación de la usuaria no se publicará ni desplegará esta fase.
 
-## Flujo de autenticación
-El cliente de navegador usa `createBrowserClient`; código de servidor usa `createServerClient` con el almacén de cookies de Next.js. Un proxy/request boundary actualiza tokens expirados y propaga cookies. Para decisiones de autorización se verifica el token con métodos oficiales como `getClaims`, no se confía en datos no verificados ni en `getSession` por sí solo. La aplicación no ofrece registro público: el servidor verifica un token de invitación válido y de un solo uso antes de permitir activación/alta. Recuperación usa redirect allowlist a rutas propias.
+## Sesión y autenticación
+El navegador usa `createBrowserClient`; código de servidor usa `createServerClient` con cookies. `proxy.ts` refresca tokens. Cada página protegida comprueba nuevamente al usuario con `getUser()` en el servidor y consulta la membresía activa. No hay registro público. La API Auth Admin se utiliza solo en servidor para enviar invitaciones. El callback intercambia el código PKCE; después, la invitada define contraseña, completa su nombre y acepta la invitación desde una función SQL que verifica identidad, correo verificado, metadata, vigencia y estado. Recuperación usa un redirect propio y muestra la misma respuesta exista o no el correo.
 
-## Autorización por roles
-Roles iniciales: `admin`, `editor`, `member`. La autoridad se deriva de `team_memberships(user_id, team_id, role, status)` y del estado activo. Las operaciones de edición/administración se validan en Server Actions o Route Handlers y de nuevo con RLS. Nunca se acepta el rol desde el cuerpo del formulario como autoridad.
+## Roles
+La autoridad sale de `memberships(user_id, team_id, role, status)`. Los roles son `admin`, `editor` y `member`. Las acciones del servidor vuelven a comprobar rol; RLS protege la base de datos. La editora no entra a administración de cuentas ni invitaciones. La socia solo ve el portal.
 
-## Modelo relacional propuesto (aún no migrado)
-- `teams`: id, name, slug, status, created_at.
-- `profiles`: user_id (Auth), display_name, avatar_path, created_at.
-- `team_memberships`: team_id, user_id, role, status, joined_at; unique(team_id,user_id).
-- `invitations`: team_id, email_normalized, role, token_hash, expires_at, accepted_at, invited_by; token solo se presenta una vez y se guarda como hash.
-- `learning_modules`: team_id, title, slug, summary, position, status, visibility, timestamps.
-- `lessons`: module_id, title, position, status, content_schema_version; los bloques se guardan como JSON validado o tablas tipadas según capacidades editoriales.
-- `resources`: team_id, storage_path, kind, title, visibility, metadata, created_by.
-- `lesson_progress`: user_id, lesson_id, status, completed_at, updated_at; unique(user_id, lesson_id).
-- `lesson_comments`: team_id, lesson_id, user_id, body, status, timestamps.
-- `community_posts` y `community_replies`: team_id, author_id, body, moderation state.
-- Posteriormente: `conversations`, `conversation_participants`, `messages`; membership y RLS deben verificar participante en cada lectura/escritura.
+## Modelo relacional implementado
+- `teams`: `id`, `name`, `slug`, `created_at`.
+- `profiles`: `id` de Auth, `full_name`, `avatar_path` y timestamps.
+- `memberships`: `team_id`, `user_id`, `role`, `status`, `joined_at` y timestamps; unique por equipo y usuario.
+- `invitations`: equipo, correo, remitente, rol, estado, vencimiento, aceptación y timestamps. Un índice parcial impide duplicar invitaciones pendientes. No se almacena el token Auth.
+- Enums `team_role`, `membership_status`, `invitation_status`.
 
-RLS: denegar por defecto. Lectura de contenido publicado solo a membresías activas del mismo equipo. Escritura según rol; usuarios ven/actualizan su perfil y su progreso; administración restringida por rol del mismo equipo. Comentarios y comunidad limitados al equipo activo. Policies de Storage replican la misma pertenencia. No aplicar hasta que consultas, roles, constraints y pruebas estén definidos.
+Migración: `supabase/migrations/20261111170000_phase_1_auth_and_memberships.sql`. El equipo inicial se inserta idempotentemente. Un trigger crea perfiles. Funciones RLS fijan `search_path` vacío. Una usuaria modifica únicamente `full_name` y `avatar_path` propios. La membresía no puede editarse directamente: `admin_update_membership` exige admin e impide remover el último admin activo. `accept_invitation` verifica identidad y activa una única membresía. `bootstrap_first_admin` solo permite el rol PostgreSQL `service_role` y falla una vez que ya hay una admin.
 
-## CMS
-Los 10 módulos son datos administrables, no páginas fijas. CMS tendrá módulos ordenados, lecciones ordenables, bloques de texto/video/imagen/descarga/ejercicio y recursos vinculados. Guardar contenido en un formato estructurado/versionado, validar en servidor y publicar de forma transaccional. Mantener borradores invisibles a socias.
+## RLS
+Denegar por defecto. La socia consulta su perfil, equipo y membresía; admin consulta integrantes e invitaciones de su equipo. El acceso a otros equipos queda bloqueado. Operaciones administrativas usan RPC segura o Auth Admin desde servidor. No existen todavía tablas de cursos, Storage ni comunidad, por lo que sus políticas se implementarán en fases futuras.
 
-## Recursos privados
-Bucket privado por defecto. Usar rutas como `team/{team_id}/resources/{resource_id}/{filename}`. No revelar rutas como autorización. Generar URLs firmadas cortas tras verificar membresía; límites/MIME/tamaño y protección de nombres en el servidor. Revisar derechos de uso y ciclo de vida antes de carga real.
+## Futuro CMS y recursos
+Los módulos y lecciones serán registros ordenables, con borradores invisibles para socias. Recursos irán en bucket privado, ligados a equipo; se emitirán URLs firmadas cortas tras verificar membresía.
 
-## Comentarios y mensajería
-Comentarios ligados a lección y membresía. Comunidad segmentada por `team_id`, con autoría, moderación y reportes definidos. Mensajes futuros solo accesibles si el usuario es participante activo; los mensajes públicos/realtime no son la fuente de autorización.
-
-## Entornos, despliegue y seguridad
-Desarrollo local (`.env.local`, ignorado); preview/producción con variables independientes en Netlify; Supabase staging recomendado antes de producción. Netlify usa su adaptador OpenNext para Next.js. Solo `NEXT_PUBLIC_SUPABASE_URL` y clave publishable/anónima se exponen; service role, DB password y SMTP quedan server-side. Revisar redirects Auth, HTTPS, dependencias, logs y headers. No activar registro abierto ni publicar claves privilegiadas.
+## Entornos y secretos
+Desarrollo en `http://localhost:3000`; `.env.local` queda ignorado por Git. Solo URL y publishable key son públicas. `SUPABASE_SERVICE_ROLE_KEY` es server-only; Resend se configura en Auth SMTP de Supabase y no necesita incluirse en el frontend ni repositorio.

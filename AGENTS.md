@@ -7,7 +7,7 @@ Invencibles Boss is a private learning and coaching platform for a community of 
 - Next.js App Router, React, strict TypeScript, Tailwind CSS.
 - shadcn/ui is the preferred component foundation; Lucide React is the icon set.
 - Supabase Cloud provides Auth, PostgreSQL, Storage and later Realtime.
-- Netlify hosts the site; GitHub is the private source repository; npm manages packages.
+- Netlify remains linked to the private repo; pnpm is preferred for local development.
 - Application routes live in `src/app`; shared shell components in `src/components/layout`; feature components in `src/components/features`; copied shadcn components in `src/components/ui`; Supabase helpers in `src/lib/supabase`; shared utilities in `src/lib`; types in `src/types`; SQL migrations in `supabase/migrations`; technical decisions in `docs/`.
 
 ## Code conventions
@@ -26,6 +26,8 @@ Invencibles Boss is a private learning and coaching platform for a community of 
 - Roles are scoped to an active `team_memberships` row; never trust a role supplied by a client.
 - Do not create partial production tables/policies. Every migration must be versioned, reviewed, safe to re-run where possible, and paired with complete RLS policies and verification.
 - Do not apply migrations to production, modify authentication/security settings, or perform destructive cloud operations without explicit authorization.
+- The user explicitly requested local-first development and no further Netlify deployments to avoid costs. Do not push to `main` or trigger Netlify until asked; `main` has auto-publishing enabled.
+- Use `SUPABASE_SERVICE_ROLE_KEY` only from `server-only` modules or one-off protected scripts. Never include it in browser bundles, logs, commits, or screenshots.
 
 ## Components and responsive behavior
 - Reuse shadcn/ui primitives (including Sidebar, Sheet, Card, Button, Dialog and Form) when appropriate.
@@ -41,3 +43,13 @@ Invencibles Boss is a private learning and coaching platform for a community of 
 - Never edit an already applied migration; add a follow-up migration.
 - Document schema, constraints, indexes, RLS policies and rollback considerations. Use a staging project before production where feasible.
 - Netlify builds from `main`; use environment-specific values in Netlify's secret environment-variable manager, not in committed files.
+
+<!-- BEGIN:nextjs-agent-rules -->
+
+## This is NOT the Next.js you know
+
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+
+<!-- END:nextjs-agent-rules -->

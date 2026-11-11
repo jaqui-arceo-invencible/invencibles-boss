@@ -28,9 +28,10 @@ Aceptación: `npm run typecheck`, lint y build pasan; repo privado actualizado e
 Dependencias: resueltas para crear el primer deploy. Antes de abrirlo al público se requiere implementar autenticación y rutas protegidas en la Fase 1.
 
 ### Fase 1 — Acceso privado e invitaciones
-Tareas: perfiles, equipos y membresías; política de registro cerrado; invitación con expiración/uso único; recuperación; checks de rol server-side; RLS; pruebas con cuentas internas. Configurar SMTP antes de enviar invitaciones externas.
-Aceptación: persona no invitada no crea cuenta; invitación válida crea membresía con rol correcto; rutas/datos/Storage bloquean usuarios sin membresía activa; admin/editora/socia reciben permisos mínimos.
-Dependencias: SMTP, dominio y proyecto Supabase; tabla y políticas aprobadas.
+Estado (2026-11-11): implementación base conectada y verificada localmente. La migración y permisos de `service_role` están aplicados en Supabase; la clave dedicada está en `.env.local`; SMTP Resend usa `noreply@somoskuper.com`; el Site URL de Auth es `http://localhost:3000`. Build, TypeScript y lint pasan. Auth aún tiene cero usuarias, así que falta bootstrap de la primera admin y pruebas manuales de roles/RLS e invitación; no se enviaron mensajes.
+Tareas: perfiles, equipos y membresías; registro cerrado; invitación de uso único y vencimiento; recuperación; checks de rol server-side; RLS; pruebas con cuentas internas.
+Aceptación: persona no invitada no accede; invitación validada crea membresía; RLS bloquea equipos ajenos; admin/editora/socia tienen permisos mínimos.
+Dependencias: proyecto Supabase, migración aplicada y primera admin verificada.
 
 ### Fase 2 — Academia y CMS
 Tareas: módulos dinámicos, lecciones, bloques de contenido, orden, borradores/publicación, permisos, recursos adjuntos.
@@ -49,17 +50,17 @@ Tareas: conversaciones/participantes, políticas exclusivas por participantes, a
 Aceptación: solo participantes leen y escriben; controles de abuso/retención definidos; revisión de seguridad completada.
 
 ## Dependencias de trabajo
-Fase 0 → Fase 1 → Fase 2 → Fase 3. Fase 4 depende de identidad, membresía y estructura de contenido. Mensajes privados dependen de membresías y reglas de seguridad maduras. No ejecutar migraciones productivas hasta aprobar y validar sus políticas.
+Fase 0 → Fase 1 → Fase 2 → Fase 3. Fase 4 depende de identidad, membresía y estructura de contenido. Mensajes privados dependen de membresías y reglas de seguridad maduras. La migración Fase 1 es aditiva; no se ejecutan cambios destructivos.
 
 ## Riesgos y decisiones pendientes
-- El correo transaccional de Supabase requiere SMTP propio para uso real.
+- El SMTP personalizado de Resend está guardado en Supabase; sigue pendiente prueba de entrega autorizada.
 - Definir dominio y política de recuperación/expiración de invitaciones.
 - Definir límites de archivo, derechos/licencias y retención de recursos.
 - Definir quién puede publicar, moderar comentarios y reactivar membresías.
 - El catálogo de componentes cambia: revisar compatibilidad/licencias al incorporar, no solo en esta fecha.
-- Sin npm y cuentas cloud verificadas, el primer deploy no es comprobable.
+- Netlify tiene auto-publish desde `main`; mantener el trabajo local para evitar cargos hasta nueva instrucción.
 
 ## Próxima tarea recomendada
-1. Iniciar Fase 1: implementar autenticación SSR, perfiles, equipos/membresías, roles, invitaciones seguras, protección server-side y RLS.
-2. Configurar SMTP antes de enviar invitaciones reales y probar el acceso con cuentas internas.
-3. Mantener el sitio Netlify privado hasta validar la autenticación y las políticas.
+1. Crear/verificar la cuenta autorizada de la primera administradora y ejecutar el bootstrap documentado.
+2. Probar rutas y RLS con cuentas internas de admin, editora y socia.
+3. Autorizar una prueba de correo antes de validar entrega SMTP o enviar invitaciones reales.

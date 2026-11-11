@@ -1,0 +1,2 @@
+import Link from "next/link";
+export default function UnauthorizedPage() { return <main className="auth-page"><section className="auth-card"><span className="eyebrow">ACCESO RESTRINGIDO</span><h1>No tienes permiso para esta sección</h1><p>Tu cuenta sigue siendo parte del equipo. Si necesitas acceso administrativo, comunícate con la administradora.</p><Link href="/" className="auth-link">Volver a mi espacio</Link></section></main>; }
