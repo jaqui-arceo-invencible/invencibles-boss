@@ -20,8 +20,12 @@ Conecta el repo desde Netlify → Add new site → Import from Git. Selecciona `
 No habilites registro público definitivo. Antes de fase de invitaciones de producción configura SMTP confiable, redirect URLs exactas en Auth, URL de sitio y plantillas en Supabase. No envíes pruebas a socias sin consentimiento. Nunca compartas una contraseña de base de datos, token SMTP o clave service-role en chat, commits o cliente web.
 
 ## Estado de cuentas
-Se creó la organización gratuita `Invencibles Boss` en Supabase. El formulario del proyecto `invencibles-boss` está preparado en Americas (la recomendación general se resuelve cerca de México) con la exposición automática de tablas desactivada y auto-RLS activado. Supabase requiere que la persona propietaria escriba una contraseña nueva de base de datos directamente en su formulario y pulse crear; no compartirla ni guardarla en el repo.
+Se creó la organización gratuita `Invencibles Boss` y el proyecto `invencibles-boss` en Supabase. Proyecto: [abrir dashboard](https://supabase.com/dashboard/project/qqhyqkklvlngcbyjdwfb). URL del proyecto: `https://qqhyqkklvlngcbyjdwfb.supabase.co`. La instancia está saludable en `us-east-2` (Ohio), plan Nano/Free. La exposición automática de tablas se dejó desactivada y el auto-RLS activado al crearla.
 
-GitHub creó el repositorio privado `jaqui-arceo-invencible/invencibles-boss`. El commit inicial `577533c` existe localmente; el push desde esta terminal falla porque no hay credencial Git disponible, aunque el navegador esté autenticado. Conectar GitHub Desktop o configurar autenticación Git y publicar `main`.
+La clave publishable está configurada en `.env.local`, excluido de Git. No se guarda aquí; puede copiarse desde Project Settings → API Keys. No colocar en el cliente ni en Git claves `secret`/service-role ni la contraseña de Postgres.
 
-Netlify todavía no está vinculado y no se ha verificado un deploy. Completar el push primero, luego importar el repo y guardar las variables desde su gestor seguro. No se han creado tablas de producción ni enviado invitaciones.
+Supabase Auth tiene habilitado el proveedor Email y la confirmación de correo. El registro de usuarios nuevos está desactivado, el proyecto no tiene usuarios y no se enviaron invitaciones. No se han creado tablas ni políticas productivas.
+
+GitHub creó el repositorio privado [`jaqui-arceo-invencible/invencibles-boss`](https://github.com/jaqui-arceo-invencible/invencibles-boss). El historial y los commits están localmente en `main`; el push desde esta terminal no está autenticado y devuelve `Repository not found`, aunque el repo sí aparece en la sesión web. Publicar `main` desde un cliente Git autenticado.
+
+Netlify todavía no está vinculado y no se ha verificado un deploy. Después de publicar `main`, importar el repositorio en Netlify y añadir `NEXT_PUBLIC_SUPABASE_URL` y `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` en su gestor de variables.
