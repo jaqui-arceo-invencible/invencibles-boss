@@ -1,9 +1,17 @@
-import Link from "next/link";
+import { PageHeader } from "@/components/design/page-header";
+import { ModuleCard } from "@/components/features/learning/module-card";
 import { requireMember } from "@/lib/auth/guards";
-import { createClient } from "@/lib/supabase/server";
+import { loadLearningSnapshot } from "@/lib/learning/catalog";
+import { memberCopy } from "@/lib/learning/copy";
+
 export const instant = false;
+
 export default async function AcademyPage() {
-  const access = await requireMember(); const db = await createClient();
-  const { data: modules } = await db.from("modules").select("id,title,slug,description,position,lessons(id)").eq("team_id", access.teamId).eq("status","published").order("position");
-  return <main className="admin-page"><span className="eyebrow">ACADEMIA</span><h1>Tu academia</h1><p>Contenido para avanzar a tu ritmo.</p><div className="module-grid">{(modules ?? []).map((m)=><article className="module-card card" key={m.id}><span className="eyebrow">MÓDULO {String(m.position+1).padStart(2,"0")}</span><h2>{m.title}</h2><p>{m.description}</p><small>{m.lessons?.length ?? 0} lecciones</small><Link href={`/app/academy/${m.slug}`}>Ver módulo →</Link></article>)}</div>{!modules?.length&&<p>Aún no hay módulos publicados.</p>}</main>;
+  const access = await requireMember();
+  const learning = await loadLearningSnapshot(access);
+  return <main className="admin-page">
+    <PageHeader title="Mi academia" backHref="/app" />
+    <p className="ds-lead">Estas son las capacitaciones publicadas para ti.</p>
+    {learning.modules.length ? <div className="learn-grid">{learning.modules.map((module) => <ModuleCard key={module.id} href={`/app/academy/${module.slug}`} position={module.position} title={module.title} description={module.description} lessonCount={module.lessons.length} percent={module.progress.percent} state={module.progress.state} coverUrl={module.coverUrl} />)}</div> : <p className="empty-copy">{memberCopy.emptyAcademy}</p>}
+  </main>;
 }

@@ -37,9 +37,9 @@ Dependencias: proyecto Supabase, migración aplicada y primera admin verificada.
 Estado (2026-11-11): tres migraciones aplicadas en Supabase y diez módulos borrador verificados. Hay editor Tiptap con bloques y enlaces seguros, portadas, duplicación de módulos y lecciones, orden accesible, previsualización de borradores, biblioteca privada con búsqueda/filtros/paginación/eliminación segura, revisiones de publicación y portal de lectura. La sesión legítima de administración permitió verificar creación y edición de un módulo; el registro temporal se retiró. TypeScript, lint, build y pruebas de validación pasaron. Las llamadas anónimas a leer módulos y borrar recursos fueron rechazadas por RLS/permisos.
 Pendiente: pruebas funcionales/RLS autenticadas de editora y socia, y contenido publicado de extremo a extremo. El editor ya guarda el borrador solo y conserva el texto si el guardado falla. La revisión automática bloqueó crear una lección de prueba en producción y una prueba mediante magic link de la admin. No se desplegó Netlify ni se hizo push por preferencia local-first.
 
-### Fase 3 — Recursos y avance
-Tareas: biblioteca privada, progreso por lección, dashboard y métricas personales.
-Aceptación: acceso a archivos condicionado por membresía; avance reproducible y aislado por usuario/equipo.
+### Fase 3 — Portal de socias y avance
+Estado (2026-11-12): el portal de la socia está en `/app`, `/app/academy`, `/app/resources`, `/app/progress` y `/app/profile`. El avance y los checklists se guardan en Supabase con RLS. En el navegador se comprobó el estado vacío con los módulos en borrador, y después una lección publicada de prueba: abrirla la dejó en progreso, el checklist y «Marcar como completada» persistieron al recargar, y Mis avances mostró 1 de 1. Esa lección quedó archivada porque el trigger de revisiones publicadas impide borrarla. TypeScript y lint pasaron. Las pruebas de `tests/learning-progress.test.mjs` pasaron. No se ejecutó el build de producción porque el servidor de desarrollo usa `.next`. No hubo push ni deploy de Netlify.
+Aceptación parcial: el acceso a archivos sigue condicionado por membresía y URLs firmadas; el avance es por usuaria y equipo. Faltan pruebas con una segunda socia, una cuenta suspendida y otro equipo.
 
 ### Fase 4 — Comunidad, comentarios y eventos
 Tareas: preguntas, experiencias, comentarios por lección, retos, ejercicios, calendario y notificaciones; activar Realtime donde aporte valor.

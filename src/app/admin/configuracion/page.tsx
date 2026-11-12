@@ -1,3 +1,5 @@
+import { PageHeader } from "@/components/design/page-header";
+import { SettingsField } from "@/components/design/settings-field";
 import { requireAdmin } from "@/lib/auth/guards";
 
 export const instant = false;
@@ -5,15 +7,9 @@ export const instant = false;
 export default async function AdminSettingsPage() {
   const access = await requireAdmin();
   return <div className="admin-page">
-    <div className="admin-page-heading"><div>
-      <span className="eyebrow">PREFERENCIAS</span>
-      <h1>Configuración</h1>
-      <p>Datos de la cuenta que administra el equipo.</p>
-    </div></div>
-    <dl className="account-facts">
-      <div><dt>Nombre</dt><dd>{access.fullName || "Sin nombre"}</dd></div>
-      <div><dt>Correo</dt><dd>{access.email || "Sin correo"}</dd></div>
-      <div><dt>Rol</dt><dd>Administradora</dd></div>
-    </dl>
+    <PageHeader title="Configuración" backHref="/admin" />
+    <SettingsField label="Nombre" value={access.fullName || "Sin nombre"} hint="Nombre de la cuenta que administra el equipo." />
+    <SettingsField label="Correo" value={access.email || "Sin correo"} hint="Se usa para entrar y para las acciones de administración." />
+    <SettingsField label="Rol" value="Administradora" hint="La publicación de lecciones queda reservada a este rol." />
   </div>;
 }

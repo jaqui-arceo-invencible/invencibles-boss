@@ -41,6 +41,7 @@ Invencibles Boss is a private learning and coaching platform for a community of 
 ## Database and production changes
 - Place ordered SQL files in `supabase/migrations` using timestamp prefixes and descriptive names.
 - Phase 2 migrations `20261111190000_phase_2_cms.sql`, `20261111203000_phase_2_published_metadata.sql`, and `20261111210000_phase_2_resource_deletion.sql` were applied manually in Supabase SQL Editor on 2026-11-11; register all three in CLI migration history before a future `db push`.
+- Phase 3 migrations `20261112041323_phase_3_learning_progress.sql` and `20261112041909_welcome_window.sql` were applied to the cloud project on 2026-11-12 and recorded in `supabase_migrations.schema_migrations`. Do not edit them.
 - Never edit an already applied migration; add a follow-up migration.
 - Document schema, constraints, indexes, RLS policies and rollback considerations. Use a staging project before production where feasible.
 - Netlify builds from `main`; use environment-specific values in Netlify's secret environment-variable manager, not in committed files.

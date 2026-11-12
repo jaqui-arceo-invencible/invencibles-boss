@@ -4,6 +4,7 @@ import { requireAdminOrEditor } from "@/lib/auth/guards";
 import { createClient } from "@/lib/supabase/server";
 import { deleteResource, updateResourceMetadata } from "@/app/admin/library/actions";
 import { DeleteResourceButton } from "@/components/features/cms/delete-resource-button";
+import { PageHeader } from "@/components/design/page-header";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 export const instant=false;
@@ -13,7 +14,7 @@ export default async function LibraryPage({searchParams}:{searchParams:Promise<{
  if(query.q)request=request.ilike("title",`%${query.q.replace(/[%_]/g,"")}%`);if(query.type==="image")request=request.like("mime_type","image/%");if(query.type==="document")request=request.eq("mime_type","application/pdf");
  const {data:resources,count}=await request;
  const rows=await Promise.all((resources??[]).map(async r=>({...r,previewUrl:(await db.storage.from("academy-private").createSignedUrl(r.storage_path,300)).data?.signedUrl??""})));
- return <main className="admin-page"><header className="admin-page-heading"><div><span className="eyebrow">CONTENIDO</span><h1>Biblioteca de recursos</h1><p>Archivos privados del equipo.</p></div></header>
+ return <main className="admin-page"><PageHeader title="Biblioteca" backHref="/admin" /><p>Archivos privados del equipo.</p>
  {query.error&&<p role="alert" className="auth-error">{query.error}</p>}{(query.uploaded||query.updated||query.deleted)&&<p role="status" className="inline-success">Cambios guardados.</p>}
  <Card><CardContent className="admin-card-content"><h2>Subir archivo</h2><form action="/admin/library/upload" method="post" encType="multipart/form-data" className="cms-form"><label>Nombre visible<input name="title" required maxLength={180}/></label><label>Imagen o PDF (máximo 20 MB)<input name="file" type="file" required accept="image/jpeg,image/png,image/webp,image/gif,application/pdf"/></label><Button type="submit">Subir</Button></form></CardContent></Card>
  <Card><CardContent className="admin-card-content"><h2>Explorar archivos ({count??0})</h2><form method="get" className="library-filters"><input name="q" placeholder="Buscar por nombre" defaultValue={query.q??""}/><select name="type" defaultValue={query.type??"all"}><option value="all">Todos</option><option value="image">Imágenes</option><option value="document">PDF</option></select><select name="view" defaultValue={view}><option value="list">Lista</option><option value="grid">Cuadrícula</option></select><Button type="submit">Filtrar</Button></form>

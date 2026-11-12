@@ -31,5 +31,8 @@ Los módulos y lecciones serán registros ordenables, con borradores invisibles 
 ## Entornos y secretos
 Desarrollo en `http://localhost:3000`; `.env.local` queda ignorado por Git. Solo URL y publishable key son públicas. `SUPABASE_SERVICE_ROLE_KEY` es server-only; Resend se configura en Auth SMTP de Supabase y no necesita incluirse en el frontend ni repositorio.
 
+## Portal de aprendizaje
+La socia entra por `/app`. El avance vive en `lesson_progress` y `checklist_item_progress`, siempre con el usuario de la sesión y RLS. El porcentaje no se guarda: se calcula con las lecciones publicadas. El manifiesto PWA no incluye service worker ni caché de contenido privado. El detalle está en `LEARNING_EXPERIENCE.md`, `PROGRESS_TRACKING.md` y `MOBILE_UX.md`.
+
 ## CMS de Fase 2
 La migración `20261111190000_phase_2_cms.sql` añadió módulos, lecciones, revisiones, bloques y recursos por equipo. El portal exige módulo y lección publicados; lee la revisión publicada, mientras el panel modifica una revisión de trabajo mediante funciones SQL transaccionales. El bucket `academy-private` guarda imágenes y PDF por equipo con URLs firmadas de 300 segundos. Ver `CMS_ARCHITECTURE.md`, `CONTENT_BLOCKS.md`, `STORAGE_AND_MEDIA.md` y `CONTENT_PUBLISHING.md`.

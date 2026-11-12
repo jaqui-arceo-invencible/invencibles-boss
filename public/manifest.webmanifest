@@ -1,0 +1,14 @@
+{
+  "name": "Invencibles Boss",
+  "short_name": "Invencibles",
+  "description": "Academia privada para continuar tu capacitación.",
+  "start_url": "/app",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#FFFFFF",
+  "theme_color": "#171717",
+  "lang": "es-MX",
+  "icons": [
+    { "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}

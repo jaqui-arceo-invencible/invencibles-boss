@@ -30,5 +30,8 @@ El repositorio privado es [`jaqui-arceo-invencible/invencibles-boss`](https://gi
 
 Supabase: [abrir proyecto](https://supabase.com/dashboard/project/qqhyqkklvlngcbyjdwfb). Se mantiene exposición automática de tablas desactivada y auto-RLS activado.
 
+## Portal de la socia
+Con la migración de Fase 3 aplicada, una integrante entra en `http://localhost:3000/app`. Si no hay módulos publicados, el inicio muestra ceros y un estado vacío. Publicar una lección y su módulo la hace visible en `/app/academy`. El avance se guarda al abrir la lección y al pulsar «Marcar como completada».
+
 ## CMS de Fase 2
 La migración `20261111190000_phase_2_cms.sql` se aplicó el 2026-11-11 desde SQL Editor. El historial de Supabase CLI no se actualizó: registrar la migración como aplicada antes de ejecutar `db push`. Los diez módulos iniciales están en borrador. En local, una administradora entra a `/admin/modules`, abre un módulo, crea una lección y guarda bloques; luego publica la lección y el módulo. La biblioteca está en `/admin/library`. Para comprobar URLs firmadas y RLS se requieren sesiones reales de cada rol.

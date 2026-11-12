@@ -1,6 +1,7 @@
 "use client";
 import { useRef, useState } from "react";
 import type { BlockInput, BlockType } from "@/lib/content/blocks";
+import { ChecklistEditor } from "@/components/features/cms/checklist-editor";
 import { RichTextEditor } from "@/components/features/cms/rich-text-editor";
 const labels: Record<BlockType,string>={rich_text:"Texto",image:"Imagen",video:"Video",document:"Documento",checklist:"Checklist",divider:"Separador",callout:"Aviso"};
 type Resource={id:string;title:string;mime_type:string};
@@ -23,7 +24,7 @@ export function BlockComposer({initial,resources,onDirty,onChange}:{initial:Bloc
  {b.type==="rich_text"&&<div><span>Texto</span><RichTextEditor value={b.content.doc??b.content.text??""} onChange={value=>change(i,"doc",value)}/></div>}
  {b.type==="video"&&<label>Enlace de YouTube o Vimeo<input type="url" value={b.content.url??""} onChange={e=>change(i,"url",e.target.value)} placeholder="https://youtu.be/..."/></label>}
  {(b.type==="image"||b.type==="document")&&<><label>Recurso<select value={b.content.resourceId??""} onChange={e=>change(i,"resourceId",e.target.value)}><option value="">Seleccionar…</option>{resources.filter(r=>b.type==="image"?r.mime_type.startsWith("image/"):r.mime_type==="application/pdf").map(r=><option key={r.id} value={r.id}>{r.title}</option>)}</select></label>{b.type==="image"&&<label>Texto alternativo<input value={b.content.alt??""} onChange={e=>change(i,"alt",e.target.value)}/></label>}</>}
- {b.type==="checklist"&&<><label>Título<input value={b.content.title??""} onChange={e=>change(i,"title",e.target.value)}/></label><label>Una actividad por línea<textarea value={b.content.items??""} onChange={e=>change(i,"items",e.target.value)} rows={5}/></label></>}
+ {b.type==="checklist"&&<ChecklistEditor title={b.content.title??""} items={b.content.items??""} onTitle={value=>change(i,"title",value)} onItems={value=>change(i,"items",value)} />}
  {b.type==="callout"&&<><label>Aviso<textarea value={b.content.text??""} onChange={e=>change(i,"text",e.target.value)} rows={3}/></label><label>Estilo<select value={b.content.variant??"neutral"} onChange={e=>change(i,"variant",e.target.value)}><option value="neutral">Neutral</option><option value="info">Informativo</option><option value="warning">Advertencia</option></select></label></>}
  </fieldset>)}<div className="block-add">{(Object.keys(labels) as BlockType[]).map(type=><button type="button" key={type} onClick={()=>add(type)}>+ {labels[type]}</button>)}</div></section>;
 }

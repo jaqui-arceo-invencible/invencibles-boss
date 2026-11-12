@@ -1,5 +1,6 @@
 import { requireAdmin } from "@/lib/auth/guards";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { PageHeader } from "@/components/design/page-header";
 import { Card, CardContent } from "@/components/ui/card";
 import { UsersTable, type AdminUserRow } from "@/components/features/admin/users-table";
 
@@ -21,7 +22,7 @@ export default async function AdminUsersPage({ searchParams }: { searchParams: P
     email: emailMap.get(membership.user_id) ?? "", role: membership.role, status: membership.status, joinedAt: membership.joined_at,
   }));
   const { error, updated } = await searchParams;
-  return <div className="admin-page"><div className="admin-page-heading"><div><span className="eyebrow">EQUIPO</span><h1>Integrantes</h1><p>Administra los accesos y permisos de Invencibles Boss.</p></div><span className="member-count">{rows.length} integrantes</span></div>
+  return <div className="admin-page"><PageHeader title="Integrantes" backHref="/admin" /><p>{rows.length} integrantes. Administra los accesos y permisos.</p>
     {error && <p className="inline-alert" role="alert">{error}</p>}{updated && <p className="inline-success" role="status">Los permisos se actualizaron.</p>}
     <Card><CardContent className="admin-card-content"><UsersTable users={rows} currentUserId={admin.userId} /></CardContent></Card>
   </div>;

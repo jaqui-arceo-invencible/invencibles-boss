@@ -1,29 +1,20 @@
-import Link from "next/link";
+import { BookOpen, FileText, Library, Settings, Users } from "lucide-react";
+import { SettingsLink, SettingsProfileHeader, SettingsSection } from "@/components/design/settings-section";
 import type { TeamRole } from "@/types/database";
 
-type HomeLink = { href: string; title: string; description: string };
-
-const memberLinks: HomeLink[] = [
-  { href: "/app/academy", title: "Mi academia", description: "Módulos y lecciones publicados." },
-  { href: "/perfil", title: "Mi perfil", description: "Tu nombre y el acceso de tu cuenta." },
-];
-
-const adminLinks: Array<HomeLink & { roles: TeamRole[] }> = [
-  { href: "/admin/modules", title: "Módulos y lecciones", description: "Editor de la academia.", roles: ["admin", "editor"] },
-  { href: "/admin/library", title: "Biblioteca de recursos", description: "Archivos privados del equipo.", roles: ["admin", "editor"] },
-  { href: "/admin/users", title: "Usuarias", description: "Accesos y permisos.", roles: ["admin"] },
-  { href: "/admin/invitations", title: "Invitaciones", description: "Altas al equipo.", roles: ["admin"] },
-  { href: "/admin/configuracion", title: "Configuración", description: "Datos de la cuenta administradora.", roles: ["admin"] },
-];
-
 export function WorkspaceHome({ mode, role, name }: { mode: "member" | "admin"; role: TeamRole; name: string }) {
-  const links = mode === "member" ? memberLinks : adminLinks.filter((item) => item.roles.includes(role));
+  const detail = role === "admin" ? "Administradora" : role === "editor" ? "Editora" : "Socia";
   return <div className="admin-page">
-    <div className="admin-page-heading"><div>
-      <span className="eyebrow">{mode === "admin" ? "ADMINISTRACIÓN" : "TU ESPACIO"}</span>
-      <h1>{name ? `Hola, ${name}` : "Hola"}</h1>
-      <p>{mode === "admin" ? "Entra a las secciones que ya están en uso." : "Continúa por tu academia o revisa tu perfil."}</p>
-    </div></div>
-    <div className="home-links">{links.map((link) => <Link href={link.href} key={link.href}><h2>{link.title}</h2><p>{link.description}</p><span>Abrir</span></Link>)}</div>
+    <SettingsProfileHeader name={name} detail={detail} />
+    {mode === "member" ? <SettingsSection title="Tu espacio">
+      <SettingsLink href="/app/academy" label="Mi academia" detail="Módulos y lecciones publicados." icon={<BookOpen size={24} />} />
+      <SettingsLink href="/perfil" label="Mi perfil" detail="Tu nombre y el acceso de tu cuenta." icon={<Users size={24} />} />
+    </SettingsSection> : <SettingsSection title="Administración">
+      <SettingsLink href="/admin/modules" label="Módulos y lecciones" detail="Editor de la academia." icon={<BookOpen size={24} />} />
+      <SettingsLink href="/admin/library" label="Biblioteca de recursos" detail="Archivos privados del equipo." icon={<Library size={24} />} />
+      {role === "admin" && <SettingsLink href="/admin/users" label="Usuarias" detail="Accesos y permisos." icon={<Users size={24} />} />}
+      {role === "admin" && <SettingsLink href="/admin/invitations" label="Invitaciones" detail="Altas al equipo." icon={<FileText size={24} />} />}
+      {role === "admin" && <SettingsLink href="/admin/configuracion" label="Configuración" detail="Datos de la cuenta administradora." icon={<Settings size={24} />} />}
+    </SettingsSection>}
   </div>;
 }
