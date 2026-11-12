@@ -1,7 +1,9 @@
-import { DashboardOverview } from "@/components/features/dashboard-overview";
+import { WorkspaceHome } from "@/components/features/workspace-home";
 import { requireAdminOrEditor } from "@/lib/auth/guards";
 
+export const instant = false;
+
 export default async function AdminHome() {
-  await requireAdminOrEditor();
-  return <DashboardOverview admin />;
+  const access = await requireAdminOrEditor();
+  return <WorkspaceHome mode="admin" role={access.role} name={access.fullName} />;
 }

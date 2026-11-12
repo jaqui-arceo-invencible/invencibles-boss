@@ -35,7 +35,7 @@ Dependencias: proyecto Supabase, migración aplicada y primera admin verificada.
 
 ### Fase 2 — Academia y CMS
 Estado (2026-11-11): tres migraciones aplicadas en Supabase y diez módulos borrador verificados. Hay editor Tiptap con bloques y enlaces seguros, portadas, duplicación de módulos y lecciones, orden accesible, previsualización de borradores, biblioteca privada con búsqueda/filtros/paginación/eliminación segura, revisiones de publicación y portal de lectura. La sesión legítima de administración permitió verificar creación y edición de un módulo; el registro temporal se retiró. TypeScript, lint, build y pruebas de validación pasaron. Las llamadas anónimas a leer módulos y borrar recursos fueron rechazadas por RLS/permisos.
-Pendiente: pruebas funcionales/RLS autenticadas de editora y socia, contenido publicado de extremo a extremo y guardado automático. La revisión automática bloqueó crear una lección de prueba en producción y una prueba mediante magic link de la admin. No se desplegó Netlify ni se hizo push por preferencia local-first.
+Pendiente: pruebas funcionales/RLS autenticadas de editora y socia, y contenido publicado de extremo a extremo. El editor ya guarda el borrador solo y conserva el texto si el guardado falla. La revisión automática bloqueó crear una lección de prueba en producción y una prueba mediante magic link de la admin. No se desplegó Netlify ni se hizo push por preferencia local-first.
 
 ### Fase 3 — Recursos y avance
 Tareas: biblioteca privada, progreso por lección, dashboard y métricas personales.

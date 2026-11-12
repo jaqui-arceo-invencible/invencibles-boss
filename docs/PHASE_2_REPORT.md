@@ -21,8 +21,8 @@
 ## Pendiente y límites de verificación
 - La revisión automática rechazó generar/verificar un magic link de la administradora sin su credencial y crear una lección persistente de prueba en producción. No se repitieron esas acciones por vías indirectas.
 - Falta probar de extremo a extremo la edición, publicación y lectura de una lección con cuentas legítimas de administradora y socia; tampoco se comprobó separación entre equipos con dos equipos reales. No se presentan como pruebas superadas.
-- Faltan pruebas de subida/borrado con archivos reales, guardado automático y pruebas móviles del editor. El orden usa botones de subir/bajar; no se incorporó `dnd-kit`.
-- Los errores de guardado del editor todavía redirigen y pueden perder los valores escritos tras un fallo del servidor. La advertencia de cambios sin guardar protege salidas voluntarias y recargas del navegador.
+- Faltan pruebas de subida/borrado con archivos reales y pruebas móviles del editor con una lección real. El orden usa botones de subir y bajar; no se incorporó `dnd-kit` porque esa alternativa ya es usable con teclado.
+- El editor guarda el borrador solo tras una pausa y conserva título, resumen, duración y bloques en la página si el servidor rechaza el guardado. No se comprobó ese flujo con una lección real en Supabase.
 - No se desplegó Netlify ni se hizo push a `main` por la preferencia vigente de desarrollo local sin nuevos despliegues. Las migraciones se aplicaron desde SQL Editor; registrar las tres en el historial de Supabase CLI antes de un futuro `db push`.
 
 ## Decisiones técnicas

@@ -1,2 +1,7 @@
-import { DashboardOverview } from "@/components/features/dashboard-overview";
-export default function MemberHomePage() { return <DashboardOverview />; }
+import { redirect } from "next/navigation";
+
+export const instant = false;
+
+export default function MemberHomePage() {
+  redirect("/");
+}

@@ -1,16 +1,24 @@
 "use client";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import type { BlockInput, BlockType } from "@/lib/content/blocks";
 import { RichTextEditor } from "@/components/features/cms/rich-text-editor";
 const labels: Record<BlockType,string>={rich_text:"Texto",image:"Imagen",video:"Video",document:"Documento",checklist:"Checklist",divider:"Separador",callout:"Aviso"};
 type Resource={id:string;title:string;mime_type:string};
 type EditableBlock=BlockInput & {clientId:string};
-export function BlockComposer({initial,resources,onDirty}:{initial:BlockInput[];resources:Resource[];onDirty?:()=>void}) {
+export function BlockComposer({initial,resources,onDirty,onChange}:{initial:BlockInput[];resources:Resource[];onDirty?:()=>void;onChange?:(blocks:BlockInput[])=>void}) {
  const [blocks,setBlocks]=useState<EditableBlock[]>(()=>initial.map(block=>({...block,clientId:crypto.randomUUID()})));
- const change=(index:number,key:string,value:string)=>{onDirty?.();setBlocks(current=>current.map((b,i)=>i===index?{...b,content:{...b.content,[key]:value}}:b));};
- const add=(type:BlockType)=>{onDirty?.();setBlocks(current=>[...current,{type,content:{},position:current.length,clientId:crypto.randomUUID()}]);};
- const remove=(index:number)=>{onDirty?.();setBlocks(current=>current.filter((_,i)=>i!==index));};
- const move=(index:number,delta:number)=>{onDirty?.();setBlocks(current=>{const next=[...current];const target=index+delta;if(target<0||target>=next.length)return current;[next[index],next[target]]=[next[target],next[index]];return next;});};
+ const blocksRef=useRef(blocks);
+ const commit=(recipe:(current:EditableBlock[])=>EditableBlock[])=>{
+  const next=recipe(blocksRef.current);
+  blocksRef.current=next;
+  setBlocks(next);
+  onDirty?.();
+  onChange?.(next.map((block,position)=>({type:block.type,content:block.content,position})));
+ };
+ const change=(index:number,key:string,value:string)=>commit(current=>current.map((b,i)=>i===index?{...b,content:{...b.content,[key]:value}}:b));
+ const add=(type:BlockType)=>commit(current=>[...current,{type,content:{},position:current.length,clientId:crypto.randomUUID()}]);
+ const remove=(index:number)=>commit(current=>current.filter((_,i)=>i!==index));
+ const move=(index:number,delta:number)=>commit(current=>{const target=index+delta;if(target<0||target>=current.length)return current;const next=[...current];[next[index],next[target]]=[next[target],next[index]];return next;});
  return <section className="block-composer"><h2>Bloques de contenido</h2><input type="hidden" name="blocks_json" value={JSON.stringify(blocks.map((b,position)=>({type:b.type,content:b.content,position})))}/>{blocks.map((b,i)=><fieldset className="block-editor" key={b.clientId}><legend>{i+1}. {labels[b.type]}</legend><div className="block-controls"><button type="button" onClick={()=>move(i,-1)} disabled={i===0} aria-label={`Subir bloque ${i+1}`}>↑</button><button type="button" onClick={()=>move(i,1)} disabled={i===blocks.length-1} aria-label={`Bajar bloque ${i+1}`}>↓</button><button type="button" onClick={()=>remove(i)} aria-label={`Quitar bloque ${i+1}`}>Quitar</button></div>
  {b.type==="rich_text"&&<div><span>Texto</span><RichTextEditor value={b.content.doc??b.content.text??""} onChange={value=>change(i,"doc",value)}/></div>}
  {b.type==="video"&&<label>Enlace de YouTube o Vimeo<input type="url" value={b.content.url??""} onChange={e=>change(i,"url",e.target.value)} placeholder="https://youtu.be/..."/></label>}

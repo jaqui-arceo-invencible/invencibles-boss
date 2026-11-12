@@ -51,27 +51,52 @@ export async function createLesson(formData: FormData) {
   redirect(`/admin/modules/${moduleId}/lessons/${lesson.id}`);
 }
 
-export async function saveLesson(formData: FormData) {
+export async function persistLessonDraft(input: {
+  moduleId: string;
+  lessonId: string;
+  title: string;
+  summary: string;
+  minutes: number;
+  blocksJson: string;
+}): Promise<{ ok: true } | { ok: false; message: string }> {
   const access = await requireAdminOrEditor();
-  const moduleId = String(formData.get("module_id") ?? "");
-  const lessonId = String(formData.get("lesson_id") ?? "");
-  const title = String(formData.get("title") ?? "").trim().slice(0, 160);
-  const summary = String(formData.get("summary") ?? "").trim().slice(0, 1000);
-  const rawBlocks = String(formData.get("blocks_json") ?? "[]");
-  const minutes = Math.max(1, Math.min(1440, Number(formData.get("estimated_minutes")) || 5));
+  const moduleId = input.moduleId;
+  const lessonId = input.lessonId;
+  if (!/^[0-9a-f-]{36}$/i.test(moduleId) || !/^[0-9a-f-]{36}$/i.test(lessonId)) return { ok: false, message: "No encontramos la lección." };
+  const title = input.title.trim().slice(0, 160);
+  const summary = input.summary.trim().slice(0, 1000);
+  const minutes = Math.max(1, Math.min(1440, Number(input.minutes) || 5));
+  if (!title) return { ok: false, message: "Escribe un título antes de guardar." };
   const supabase = await createClient();
   let blocks;
-  try { blocks = parseBlocks(rawBlocks); } catch { redirect(`/admin/modules/${moduleId}/lessons/${lessonId}?error=Revisa%20los%20bloques`); }
+  try { blocks = parseBlocks(input.blocksJson); } catch (error) {
+    return { ok: false, message: error instanceof Error ? error.message : "Revisa los bloques." };
+  }
   for (const block of blocks) if (block.type === "image" || block.type === "document") {
-    const { data: resource } = await supabase.from("resources").select("id").eq("id",block.content.resourceId).eq("team_id",access.teamId).single();
-    if (!resource) redirect(`/admin/modules/${moduleId}/lessons/${lessonId}?error=Recurso%20no%20válido`);
+    const { data: resource } = await supabase.from("resources").select("id").eq("id", block.content.resourceId).eq("team_id", access.teamId).single();
+    if (!resource) return { ok: false, message: "Hay un archivo que ya no pertenece a tu equipo." };
   }
   const { data: lesson } = await supabase.from("lessons").select("id").eq("id", lessonId).eq("module_id", moduleId).single();
-  if (!lesson || !title) redirect(`/admin/modules/${moduleId}`);
+  if (!lesson) return { ok: false, message: "No encontramos la lección." };
   const { error } = await supabase.rpc("save_lesson_draft", { target_id: lessonId, new_title: title, new_summary: summary, new_minutes: minutes, new_blocks: blocks });
-  if (error) redirect(`/admin/modules/${moduleId}/lessons/${lessonId}?error=No%20se%20pudo%20guardar`);
+  if (error) return { ok: false, message: "No se pudo guardar. Tus cambios siguen en esta página." };
   revalidatePath(`/admin/modules/${moduleId}/lessons/${lessonId}`);
-  revalidatePath(`/app/academy`);
+  revalidatePath("/app/academy");
+  return { ok: true };
+}
+
+export async function saveLesson(formData: FormData) {
+  const moduleId = String(formData.get("module_id") ?? "");
+  const lessonId = String(formData.get("lesson_id") ?? "");
+  const result = await persistLessonDraft({
+    moduleId,
+    lessonId,
+    title: String(formData.get("title") ?? ""),
+    summary: String(formData.get("summary") ?? ""),
+    minutes: Number(formData.get("estimated_minutes")),
+    blocksJson: String(formData.get("blocks_json") ?? "[]"),
+  });
+  if (!result.ok) redirect(`/admin/modules/${moduleId}/lessons/${lessonId}?error=${encodeURIComponent(result.message)}`);
   redirect(`/admin/modules/${moduleId}/lessons/${lessonId}?saved=1`);
 }
 
