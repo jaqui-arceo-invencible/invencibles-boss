@@ -33,3 +33,6 @@ Comprobaciones: `pnpm typecheck`, `pnpm lint`, `pnpm build`.
 
 ## Estado
 Fase 1 en verificación local. Contiene pantallas y lógica de login, recuperación, aceptación de invitación, onboarding y administración. Antes de usar administración aplica la migración y prepara la primera administradora. No publicar a `main`: Netlify tiene autodeploy activo y la usuaria pidió evitar nuevos despliegues.
+
+## CMS local
+Con la migración de Fase 2 aplicada, abre `http://localhost:3000/admin/modules` con una cuenta administradora. Los diez módulos iniciales están en borrador. Crea una lección, añade bloques y guarda; publica la lección y después el módulo para verla en `/app/academy`. La biblioteca privada está en `/admin/library`. Consulta `docs/PHASE_2_REPORT.md` para estado y limitaciones.

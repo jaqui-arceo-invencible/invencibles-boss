@@ -28,14 +28,14 @@ Aceptación: `npm run typecheck`, lint y build pasan; repo privado actualizado e
 Dependencias: resueltas para crear el primer deploy. Antes de abrirlo al público se requiere implementar autenticación y rutas protegidas en la Fase 1.
 
 ### Fase 1 — Acceso privado e invitaciones
-Estado (2026-11-11): implementación base conectada y verificada localmente. La migración y permisos de `service_role` están aplicados en Supabase; la clave dedicada está en `.env.local`; SMTP Resend usa `noreply@somoskuper.com`; el Site URL de Auth es `http://localhost:3000`. Build, TypeScript y lint pasan. Auth aún tiene cero usuarias, así que falta bootstrap de la primera admin y pruebas manuales de roles/RLS e invitación; no se enviaron mensajes.
+Estado (2026-11-11): la primera administradora fue creada y verificada; migración y permisos de `service_role` aplicados; clave dedicada en `.env.local`; SMTP Resend usa `noreply@somoskuper.com`; Site URL de Auth `http://localhost:3000`. Siguen pendientes pruebas manuales de invitaciones y de roles/RLS con cuentas legítimas.
 Tareas: perfiles, equipos y membresías; registro cerrado; invitación de uso único y vencimiento; recuperación; checks de rol server-side; RLS; pruebas con cuentas internas.
 Aceptación: persona no invitada no accede; invitación validada crea membresía; RLS bloquea equipos ajenos; admin/editora/socia tienen permisos mínimos.
 Dependencias: proyecto Supabase, migración aplicada y primera admin verificada.
 
 ### Fase 2 — Academia y CMS
-Tareas: módulos dinámicos, lecciones, bloques de contenido, orden, borradores/publicación, permisos, recursos adjuntos.
-Aceptación: editora crea/ordena/publica contenido sin código; una socia solo obtiene contenido publicado y autorizado.
+Estado (2026-11-11): tres migraciones aplicadas en Supabase y diez módulos borrador verificados. Hay editor Tiptap con bloques y enlaces seguros, portadas, duplicación de módulos y lecciones, orden accesible, previsualización de borradores, biblioteca privada con búsqueda/filtros/paginación/eliminación segura, revisiones de publicación y portal de lectura. La sesión legítima de administración permitió verificar creación y edición de un módulo; el registro temporal se retiró. TypeScript, lint, build y pruebas de validación pasaron. Las llamadas anónimas a leer módulos y borrar recursos fueron rechazadas por RLS/permisos.
+Pendiente: pruebas funcionales/RLS autenticadas de editora y socia, contenido publicado de extremo a extremo y guardado automático. La revisión automática bloqueó crear una lección de prueba en producción y una prueba mediante magic link de la admin. No se desplegó Netlify ni se hizo push por preferencia local-first.
 
 ### Fase 3 — Recursos y avance
 Tareas: biblioteca privada, progreso por lección, dashboard y métricas personales.

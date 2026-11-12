@@ -19,3 +19,6 @@ Licencias/compatibilidad indicadas como valores publicados en los repositorios/d
 | Motion | [motion.dev](https://motion.dev) · MIT | Animación React; paquete `motion`. | Opcional, una vez definidos movimientos y accesibilidad. Alternativa: CSS transitions/reduced-motion. |
 
 En fase inicial instala solo lo necesario para shell: shadcn/ui (copiado local), Lucide React y Supabase SSR/JS. Los demás se integran por necesidad para evitar peso y deuda de mantenimiento.
+
+## Incorporación de Fase 2
+Se incorporaron `@tiptap/react`, `@tiptap/pm` y `@tiptap/starter-kit` 3.30.3 desde npm para el editor enriquecido. La licencia publicada del repositorio y del paquete es MIT ([código](https://github.com/ueberdosis/tiptap/blob/main/packages/react/package.json), [licencia](https://github.com/ueberdosis/tiptap/blob/main/LICENSE.md)); no se usan extensiones Pro. npm mostró avisos de peer dependency para extensiones de menú opcionales y un resumen de auditoría; no se introdujeron esas extensiones en la UI. dnd-kit, Yet Another React Lightbox, TanStack Table, React Hook Form/Zod y Sonner siguen evaluados pero no instalados: el CMS actual usa botones de orden accesibles y formularios simples con validación del servidor. Incorporarlos requiere un caso concreto y verificación de licencias/compatibilidad al hacerlo.

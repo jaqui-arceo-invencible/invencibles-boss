@@ -19,7 +19,7 @@ type AppShellProps = { mode: "member" | "admin"; children: React.ReactNode; role
 
 const memberNav: NavItem[] = [
   { label: "Inicio", href: "/", icon: Home },
-  { label: "Mi academia", href: "/academia", icon: BookOpen },
+  { label: "Mi academia", href: "/app/academy", icon: BookOpen },
   { label: "Recursos", href: "/recursos", icon: Library },
   { label: "Comunidad", href: "/comunidad", icon: MessageCircle },
   { label: "Mis avances", href: "/avances", icon: Activity },
@@ -28,8 +28,8 @@ const memberNav: NavItem[] = [
 
 const adminNav: NavItem[] = [
   { label: "Dashboard", href: "/admin", icon: LayoutDashboard },
-  { label: "Módulos y lecciones", href: "/admin/modulos", icon: BookOpen },
-  { label: "Biblioteca de recursos", href: "/admin/recursos", icon: Library },
+  { label: "Módulos y lecciones", href: "/admin/modules", icon: BookOpen },
+  { label: "Biblioteca de recursos", href: "/admin/library", icon: Library },
   { label: "Usuarias", href: "/admin/users", icon: Users },
   { label: "Invitaciones", href: "/admin/invitations", icon: FileText },
   { label: "Comunidad", href: "/admin/comunidad", icon: MessageCircle },

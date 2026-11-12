@@ -1,0 +1,5 @@
+# Publicación y revisiones
+
+Módulos y lecciones tienen estado `draft`, `published` o `archived`. Una socia solo consulta una lección si ambos están `published`. El borrador de una lección se guarda con `save_lesson_draft`; si la revisión de trabajo coincide con la publicada, se crea otra. `publish_lesson` mueve el puntero publicado en una transacción y requiere rol admin. Un trigger impide modificar o borrar revisiones que ya tuvieron publicación.
+
+Las editoras pueden preparar borradores, pero la publicación definitiva corresponde a una administradora. Cambiar el estado del módulo oculta o muestra sus lecciones publicadas sin borrar registros. El portal lee exclusivamente `published_revision_id`; la migración de seguimiento también conserva título, resumen y duración publicados en `lessons` hasta la siguiente publicación. La restauración futura puede crear un nuevo borrador copiando una revisión histórica y publicarlo después de revisión.

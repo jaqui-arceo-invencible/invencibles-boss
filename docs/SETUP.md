@@ -29,3 +29,6 @@ El Site URL de Auth y `NEXT_PUBLIC_SITE_URL` están en `http://localhost:3000`. 
 El repositorio privado es [`jaqui-arceo-invencible/invencibles-boss`](https://github.com/jaqui-arceo-invencible/invencibles-boss). Netlify sigue conectado a `main` con autodeploy activo. Por indicación de la usuaria, este trabajo continúa localmente; no hacer push a `main` ni publicar despliegues hasta que lo pida, ya que puede generar costos.
 
 Supabase: [abrir proyecto](https://supabase.com/dashboard/project/qqhyqkklvlngcbyjdwfb). Se mantiene exposición automática de tablas desactivada y auto-RLS activado.
+
+## CMS de Fase 2
+La migración `20261111190000_phase_2_cms.sql` se aplicó el 2026-11-11 desde SQL Editor. El historial de Supabase CLI no se actualizó: registrar la migración como aplicada antes de ejecutar `db push`. Los diez módulos iniciales están en borrador. En local, una administradora entra a `/admin/modules`, abre un módulo, crea una lección y guarda bloques; luego publica la lección y el módulo. La biblioteca está en `/admin/library`. Para comprobar URLs firmadas y RLS se requieren sesiones reales de cada rol.
