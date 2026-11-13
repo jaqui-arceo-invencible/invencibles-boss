@@ -8,8 +8,8 @@ export function SettingsProfileHeader({ name, detail }: { name: string; detail: 
   </div>;
 }
 
-export function SettingsSection({ title, children }: { title: string; children: React.ReactNode }) {
-  return <section className="ds-section"><h2>{title}</h2><div className="ds-section-body">{children}</div></section>;
+export function SettingsSection({ title, children, id }: { title: string; children: React.ReactNode; id?: string }) {
+  return <section className="ds-section" id={id}><h2>{title}</h2><div className="ds-section-body">{children}</div></section>;
 }
 
 export function SettingsLink({ href, label, detail, icon }: { href: string; label: string; detail?: string; icon?: React.ReactNode }) {

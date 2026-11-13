@@ -1,20 +1,14 @@
 /* eslint-disable @next/next/no-img-element -- Private signed URLs should not pass through a shared image optimizer cache. */
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { CheckCircle2, Circle, CircleDot } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import { PageHeader } from "@/components/design/page-header";
 import { ProgressMeter } from "@/components/design/progress-meter";
 import { requireMember } from "@/lib/auth/guards";
 import { loadLearningSnapshot } from "@/lib/learning/catalog";
-import { lessonStatusLabel, moduleStateLabel, type LessonStatus } from "@/lib/learning/progress";
+import { formatLearningDuration, lessonStatusLabel, moduleStateLabel } from "@/lib/learning/progress";
 
 export const instant = false;
-
-function StatusIcon({ status }: { status: LessonStatus }) {
-  if (status === "completed") return <CheckCircle2 size={22} aria-hidden="true" />;
-  if (status === "in_progress") return <CircleDot size={22} aria-hidden="true" />;
-  return <Circle size={22} aria-hidden="true" />;
-}
 
 export default async function AcademyModulePage({ params }: { params: Promise<{ moduleSlug: string }> }) {
   const access = await requireMember();
@@ -22,21 +16,40 @@ export default async function AcademyModulePage({ params }: { params: Promise<{ 
   const learning = await loadLearningSnapshot(access);
   const course = learning.modules.find((item) => item.slug === moduleSlug);
   if (!course) notFound();
-  const next = course.lessons.find((lesson) => lesson.status === "in_progress") ?? course.lessons.find((lesson) => lesson.status !== "completed") ?? course.lessons[0];
-  const action = course.progress.state === "completed" ? "Repasar" : course.progress.state === "in_progress" ? "Continuar" : "Comenzar";
+  const minutes = course.lessons.reduce((total, lesson) => total + lesson.estimatedMinutes, 0);
+  const lessonCount = course.lessons.length === 1 ? "1 lección" : `${course.lessons.length} lecciones`;
 
-  return <main className="admin-page">
-    <PageHeader title={course.title} backHref="/app/academy" />
-    {course.coverUrl ? <img className="learn-cover learn-cover-wide" src={course.coverUrl} alt="" /> : null}
-    {course.description ? <p className="ds-lead">{course.description}</p> : null}
-    <p className="learn-meta">{course.lessons.length === 1 ? "1 lección publicada" : `${course.lessons.length} lecciones publicadas`} · {moduleStateLabel(course.progress.state)} · {course.progress.percent}%</p>
-    <ProgressMeter value={course.progress.percent} label={`Progreso de ${course.title}`} />
-    {next ? <Link className="ds-button ds-button-primary" href={`/app/academy/${course.slug}/${next.slug}`}>{action}</Link> : <p className="empty-copy">Este módulo todavía no tiene lecciones publicadas.</p>}
-    <ol className="member-lessons">{course.lessons.map((lesson, index) => <li key={lesson.id}>
-      <Link href={`/app/academy/${course.slug}/${lesson.slug}`} aria-label={`${lesson.title}, ${lessonStatusLabel(lesson.status)}`}>
-        <StatusIcon status={lesson.status} />
-        <span><strong>{String(index + 1).padStart(2, "0")}  {lesson.title}</strong><small>{lesson.summary || lessonStatusLabel(lesson.status)}</small></span>
-      </Link>
-    </li>)}</ol>
+  return <main className="admin-page member-course-page">
+    <PageHeader backHref="/app/academy" />
+    <section className="course-hero">
+      {course.coverUrl ? <div className="course-hero-cover"><img src={course.coverUrl} alt="" /></div> : null}
+      <div className="course-hero-copy">
+        <h1 className="course-hero-title">{course.title}</h1>
+        {course.description ? <p>{course.description}</p> : null}
+      </div>
+      <p className="course-stats">
+        <span>{lessonCount}</span>
+        <span>{formatLearningDuration(minutes)}</span>
+        <span>{course.progress.percent > 0 ? `${moduleStateLabel(course.progress.state)} · ${course.progress.percent}%` : moduleStateLabel(course.progress.state)}</span>
+      </p>
+      <ProgressMeter value={course.progress.percent} label={`Progreso de ${course.title}`} />
+      {!course.lessons.length ? <p className="empty-copy">Este módulo todavía no tiene lecciones publicadas.</p> : null}
+    </section>
+    {course.lessons.length ? <section className="course-outline">
+      <h2>Lecciones</h2>
+      <ol className="course-lessons">{course.lessons.map((lesson, index) => <li key={lesson.id}>
+        <Link className="course-lesson" href={`/app/academy/${course.slug}/${lesson.slug}`} aria-label={`${lesson.title}, ${lessonStatusLabel(lesson.status)}`}>
+          <span className="course-lesson-art" aria-hidden="true">
+            {lesson.coverUrl ? <img src={lesson.coverUrl} alt="" /> : <span className="course-lesson-mark"><small>Lección</small><strong>{String(index + 1).padStart(2, "0")}</strong></span>}
+          </span>
+          <span className="course-lesson-copy">
+            <strong>{lesson.title}</strong>
+            {lesson.summary ? <small>{lesson.summary}</small> : null}
+            <span className="learn-meta">{formatLearningDuration(lesson.estimatedMinutes)} · {lessonStatusLabel(lesson.status)}</span>
+          </span>
+          <ChevronRight size={24} aria-hidden="true" />
+        </Link>
+      </li>)}</ol>
+    </section> : null}
   </main>;
 }

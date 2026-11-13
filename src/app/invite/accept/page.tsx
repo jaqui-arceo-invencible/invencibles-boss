@@ -1,15 +1,15 @@
 import Link from "next/link";
-import { updatePassword } from "@/app/auth/actions";
-import { createClient } from "@/lib/supabase/server";
-import { PasswordInput } from "@/components/features/auth/password-input";
-import { AuthSubmitButton } from "@/components/features/auth/auth-submit-button";
+import { InvitationAccountForm } from "@/components/features/auth/invitation-account-form";
 
 export const instant = false;
 
-export default async function AcceptInvitationPage({ searchParams }: { searchParams: Promise<{ error?: string }> }) {
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  const { error } = await searchParams;
-  if (!user) return <main className="auth-page"><section className="auth-card"><span className="eyebrow">INVITACIÓN PRIVADA</span><h1>Revisa tu enlace</h1><p>{error ?? "Abre el enlace de invitación desde el correo que recibiste. El enlace es personal y de uso único."}</p><Link href="/login" className="auth-link">Ir al inicio de sesión</Link></section></main>;
-  return <main className="auth-page"><section className="auth-card"><span className="eyebrow">INVITACIÓN PRIVADA</span><h1>Activa tu acceso</h1><p>Elige una contraseña para terminar de activar tu cuenta.</p>{error && <p role="alert" className="auth-error">{error}</p>}<form action={updatePassword} className="auth-form"><label htmlFor="password">Contraseña</label><PasswordInput autoComplete="new-password" minLength={12} /><p className="auth-hint">Usa al menos 12 caracteres.</p><AuthSubmitButton>Continuar</AuthSubmitButton></form></section></main>;
+export default function AcceptInvitationPage() {
+  return <main className="auth-page login-page"><section className="auth-card">
+    {/* eslint-disable-next-line @next/next/no-img-element */}
+    <img className="invitation-logo" src="/brand/jacqui-logo.webp" alt="Jacqui Arceo" width={80} height={80} />
+    <span className="eyebrow">INVENCIBLES BOSS</span><h1>Crea tu cuenta</h1>
+    <p>Prepara tus datos y confirma la invitación con el código de tu correo.</p>
+    <InvitationAccountForm />
+    <Link href="/login" className="auth-link">Ya tengo una cuenta · Iniciar sesión</Link>
+  </section></main>;
 }

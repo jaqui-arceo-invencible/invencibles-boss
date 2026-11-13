@@ -1,6 +1,6 @@
 # Experiencia móvil
 
-En pantallas de hasta 760 px, el portal de la socia oculta el botón del sidebar y muestra una barra inferior fija con Inicio, Academia, Recursos, Avances y Perfil. La barra respeta `env(safe-area-inset-bottom)`, marca la sección activa y deja espacio al final del contenido. Los destinos son los mismos que el sidebar de escritorio, definidos una sola vez en `src/components/layout/app-shell.tsx`.
+En pantallas de hasta 760 px, el portal de la socia oculta el botón del sidebar y muestra una barra inferior fija con Inicio, Academia, Comunidad, Avances y Perfil. La barra respeta `env(safe-area-inset-bottom)`, marca la sección activa y deja espacio al final del contenido. Mis recursos y Mensajes siguen en el índice y en el menú de escritorio. En el teléfono, la bandeja y el hilo son pantallas separadas. Los destinos viven en `src/components/layout/app-shell.tsx`.
 
 Las tarjetas se apilan en el celular y pasan a dos columnas desde 900 px. La lectura de la lección permanece en una columna de hasta 640 px. Imágenes y videos se ajustan al ancho.
 

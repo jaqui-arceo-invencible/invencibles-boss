@@ -48,6 +48,10 @@ Los botones de shadcn (`Button`) usan las mismas medidas. `default` equivale al 
 | `/admin/modules` | Lista de módulos y alta de un borrador |
 | `/admin/modules/[moduleId]` | Datos del módulo y lista de lecciones |
 | `/app/academy` | Módulos publicados para la socia |
+| `/app/community` | Feed privado, publicación y comentarios de lección |
+| `/app/messages` | Bandeja y conversación directa |
+| `/app/notifications` | Avisos de la socia |
+| `/admin/community` | Reportes y moderación, solo administración |
 | `/admin/library`, `/admin/users`, `/admin/invitations` | Misma página clara, campos y botones del sistema |
 
 ## Antes de cerrar una pantalla

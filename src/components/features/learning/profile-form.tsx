@@ -1,17 +1,20 @@
 "use client";
 /* eslint-disable @next/next/no-img-element -- Private signed URLs should not pass through a shared image optimizer cache. */
 
-import { useActionState } from "react";
-import { changePassword, updateAvatar, updateDisplayName } from "@/app/app/profile/actions";
+import { useActionState, useRef } from "react";
+import { changePassword, updateAvatar, updateDirectoryVisibility, updateDisplayName } from "@/app/app/profile/actions";
 import { PrimaryButton } from "@/components/design/buttons";
 import { SettingsSection } from "@/components/design/settings-section";
 import { SignOutButton } from "@/components/features/sign-out-button";
+import { FilePicker } from "@/components/ui/file-picker";
 
 const idle = { ok: true, message: "" };
 
-export function ProfileForm({ name, avatarUrl }: { name: string; avatarUrl: string }) {
+export function ProfileForm({ name, avatarUrl, directoryVisible }: { name: string; avatarUrl: string; directoryVisible: boolean }) {
+  const avatarForm = useRef<HTMLFormElement>(null);
   const [nameState, nameAction, namePending] = useActionState(updateDisplayName, idle);
   const [avatarState, avatarAction, avatarPending] = useActionState(updateAvatar, idle);
+  const [directoryState, directoryAction, directoryPending] = useActionState(updateDirectoryVisibility, idle);
   const [passwordState, passwordAction, passwordPending] = useActionState(changePassword, idle);
 
   return <>
@@ -23,12 +26,19 @@ export function ProfileForm({ name, avatarUrl }: { name: string; avatarUrl: stri
       </form>
     </SettingsSection>
     <SettingsSection title="Tu imagen">
-      <form className="ds-form" action={avatarAction}>
+      <form ref={avatarForm} className="ds-form" action={avatarAction}>
         {avatarUrl ? <img className="profile-photo" src={avatarUrl} alt="" /> : null}
-        <label>Imagen de perfil<input name="avatar" type="file" accept="image/jpeg,image/png,image/webp" /></label>
+        <FilePicker label={avatarPending ? "Subiendo…" : "Subir imagen"} disabled={avatarPending} name="avatar" accept="image/jpeg,image/png,image/webp" onChange={(event) => { if (event.currentTarget.files?.length) avatarForm.current?.requestSubmit(); }} />
         <p className="form-hint">JPG, PNG o WebP. Menos de 5 MB.</p>
-        <PrimaryButton type="submit" disabled={avatarPending}>{avatarPending ? "Guardando…" : "Guardar imagen"}</PrimaryButton>
         {avatarState.message ? <p className="form-note" role="status">{avatarState.message}</p> : null}
+      </form>
+    </SettingsSection>
+    <SettingsSection title="Directorio">
+      <form className="ds-form" action={directoryAction}>
+        <label className="community-check"><input name="directory_visible" type="checkbox" defaultChecked={directoryVisible} /> Aparecer en el directorio del equipo</label>
+        <p className="form-hint">Si lo desactivas, no aparecerás en el directorio. Tus publicaciones siguen mostrando tu nombre.</p>
+        <PrimaryButton type="submit" disabled={directoryPending}>{directoryPending ? "Guardando…" : "Guardar visibilidad"}</PrimaryButton>
+        {directoryState.message ? <p className="form-note" role="status">{directoryState.message}</p> : null}
       </form>
     </SettingsSection>
     <SettingsSection title="Contraseña">

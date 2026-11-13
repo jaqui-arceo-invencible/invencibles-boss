@@ -33,6 +33,17 @@ export async function updateAvatar(_state: ActionState, formData: FormData): Pro
   return { ok: true, message: "Imagen actualizada." };
 }
 
+export async function updateDirectoryVisibility(_state: ActionState, formData: FormData): Promise<ActionState> {
+  const access = await requireMember();
+  const visible = formData.get("directory_visible") === "on";
+  const db = await createClient();
+  const { error } = await db.from("profiles").update({ directory_visible: visible }).eq("id", access.userId);
+  if (error) return { ok: false, message: "No pudimos guardar tu visibilidad." };
+  revalidatePath("/app/profile");
+  revalidatePath("/app/community");
+  return { ok: true, message: visible ? "Tu nombre queda visible para el equipo." : "Tu nombre queda fuera del directorio." };
+}
+
 export async function changePassword(_state: ActionState, formData: FormData): Promise<ActionState> {
   await requireMember();
   const password = String(formData.get("password") ?? "");

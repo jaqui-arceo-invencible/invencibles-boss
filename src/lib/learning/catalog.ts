@@ -22,6 +22,7 @@ export type LessonView = {
   status: LessonStatus;
   lastOpenedAt: string | null;
   completedAt: string | null;
+  coverUrl: string | null;
 };
 
 export type ModuleView = {
@@ -71,14 +72,17 @@ export async function loadLearningSnapshot(access: AccessContext): Promise<Learn
   const lessons = lessonRows(lessonsResult.data).filter((lesson) => lesson.publishedRevisionId);
   const revisionIds = lessons.map((lesson) => lesson.publishedRevisionId);
   const revisionsResult = revisionIds.length
-    ? await db.from("lesson_revisions").select("id,title,summary,estimated_minutes").in("id", revisionIds)
+    ? await db.from("lesson_revisions").select("id,title,summary,estimated_minutes,cover_resource_id").in("id", revisionIds)
     : { data: [], error: null };
   if (revisionsResult.error) throw new Error("No pudimos cargar las lecciones publicadas.");
   const revisions = new Map(revisionRows(revisionsResult.data).map((revision) => [revision.id, revision]));
   const progress = progressRows(progressResult.data);
   const progressByLesson = new Map(progress.map((row) => [row.lessonId, row]));
 
-  const coverIds = modules.flatMap((module) => module.coverResourceId ? [module.coverResourceId] : []);
+  const coverIds = [...new Set([
+    ...modules.flatMap((module) => module.coverResourceId ? [module.coverResourceId] : []),
+    ...[...revisions.values()].flatMap((revision) => revision.coverResourceId ? [revision.coverResourceId] : []),
+  ])];
   const coversResult = coverIds.length
     ? await db.from("resources").select("id,storage_path").eq("team_id", access.teamId).in("id", coverIds)
     : { data: [], error: null };
@@ -107,6 +111,7 @@ export async function loadLearningSnapshot(access: AccessContext): Promise<Learn
           status: row?.status ?? "not_started",
           lastOpenedAt: row?.lastOpenedAt ?? null,
           completedAt: row?.completedAt ?? null,
+          coverUrl: revision.coverResourceId ? coverUrls.get(revision.coverResourceId) ?? null : null,
         } satisfies LessonView];
       })
       .sort((a, b) => a.position - b.position);
@@ -283,6 +288,7 @@ function revisionRows(value: unknown) {
       title: item.title,
       summary: typeof item.summary === "string" ? item.summary : "",
       estimatedMinutes: typeof item.estimated_minutes === "number" ? item.estimated_minutes : 5,
+      coverResourceId: typeof item.cover_resource_id === "string" ? item.cover_resource_id : null,
     }];
   });
 }

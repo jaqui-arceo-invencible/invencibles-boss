@@ -62,6 +62,15 @@ export function lessonStatusLabel(status: LessonStatus) {
   return "Pendiente";
 }
 
+export function formatLearningDuration(minutes: number) {
+  const total = Math.max(0, Math.round(minutes));
+  if (total < 1) return "Menos de 1 min";
+  if (total < 60) return `${total} min`;
+  const hours = Math.floor(total / 60);
+  const rest = total % 60;
+  return rest ? `${hours} h ${rest} min` : `${hours} h`;
+}
+
 export function newChecklistItemId() {
   return crypto.randomUUID().replace(/-/g, "").slice(0, 16);
 }

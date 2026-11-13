@@ -1,0 +1,22 @@
+{
+  "imagesRemoved": 39,
+  "textLessonsCompleted": 1,
+  "videos": [
+    {
+      "id": "aa1129f8-0183-4323-9b57-d1784604fde9",
+      "title": "Video: acompañar con límites profesionales",
+      "url": "https://www.youtube.com/watch?v=ezmexT_j75U"
+    },
+    {
+      "id": "4b640040-06f7-4da9-85cc-3296c28f36f6",
+      "title": "Video: límites entre trabajo y vida personal",
+      "url": "https://www.youtube.com/watch?v=ezmexT_j75U"
+    },
+    {
+      "id": "9be7fc7f-5857-433d-a3ce-94208e09ec2f",
+      "title": "Video: relaciones y confianza en el trabajo",
+      "url": "https://www.youtube.com/watch?v=ezmexT_j75U"
+    }
+  ],
+  "backup": "/var/folders/kz/90cp6fbs2b7bfswct4m1nz2w0000gn/T/invencibles-lessons-09wY70"
+}

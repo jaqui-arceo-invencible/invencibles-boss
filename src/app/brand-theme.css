@@ -1,0 +1,71 @@
+/* Login identity applied to existing components; no geometry or layout changes. */
+.app-frame {
+  --ds-ink: #41242d;
+  --ds-muted: #755f66;
+  --ds-border: #e5dcd5;
+  --ds-accent: #5c2a36;
+  --ds-bg: #fffdfb;
+  --ds-surface: #f4efe8;
+  --ink: #41242d;
+  --purple: #5c2a36;
+  --lavender: #f4e8e7;
+  --line: #e5dcd5;
+  --paper: #fffdfb;
+  --background: #fffdfb;
+  --foreground: #41242d;
+  --primary: #5c2a36;
+  --primary-foreground: #fff;
+  --secondary: #f4efe8;
+  --secondary-foreground: #5c2a36;
+  --muted: #f4efe8;
+  --muted-foreground: #755f66;
+  --accent: #f4e8e7;
+  --accent-foreground: #5c2a36;
+  --border: #e5dcd5;
+  --input: #d4c2b0;
+  --ring: #a77d44;
+  --sidebar: #fffdfb;
+  --sidebar-foreground: #41242d;
+  --sidebar-accent: #f4e8e7;
+  --sidebar-accent-foreground: #5c2a36;
+  --sidebar-primary: #5c2a36;
+  --sidebar-primary-foreground: #fff;
+  --sidebar-border: #e5dcd5;
+  --sidebar-ring: #a77d44;
+  background-color: var(--ds-bg);
+}
+.app-frame .main-column { background-color: var(--ds-bg); }
+.app-frame .topbar { background-color: #fffdfbf2; border-color: var(--ds-border); }
+.app-frame .app-sidebar [data-slot="sidebar-inner"] { background-color: #fffdfb; }
+.app-frame .brand-mark { background: #fff; color: var(--ds-accent); }
+.workspace-brand-logo { width: 100%; height: 100%; object-fit: contain; }
+.app-frame .sidebar-brand strong { color: var(--ds-ink); }
+.app-frame .sidebar-brand span { color: var(--ds-muted); }
+.app-frame .app-sidebar [data-sidebar="menu-button"][data-active="true"],
+.app-frame .lesson-index nav a[aria-current="page"] { background: #f4e8e7; color: #5c2a36; }
+.app-frame .app-sidebar [data-sidebar="menu-button"][data-active="true"] svg { color: #5c2a36; }
+.app-frame :is(a, button, summary, input, textarea, select):focus-visible { outline-color: #a77d44; }
+.app-frame :is(.ds-button-primary, a.ds-button-primary, button.ds-button-primary),
+.app-frame [data-slot="button"][data-variant="default"] { background: #5c2a36 !important; color: #fff !important; }
+.app-frame .ds-profile-avatar { border-color: #d4c2b0; background-color: #f4e8e7; color: #5c2a36; }
+.app-frame :is(.continue-card, .continue-card-icon) { background: #f4efe8; border-color: var(--ds-border); }
+.app-frame .continue-card-icon { color: #5c2a36; }
+.app-frame .continue-card-copy .learn-kicker { color: #6d4450; }
+.app-frame .ds-progress { background-color: #e9dfd6; }
+.app-frame .ds-progress > span { background-color: #a77d44; }
+.app-frame :is(.course-progress, .learn-progress) { background-color: #e9dfd6; }
+.app-frame :is(.course-progress, .learn-progress) > :is(i, span) { background-color: #a77d44; }
+.app-frame .wizard-steps button[aria-current="step"] { border-color: #c6a36a; background: #f4e8e7; color: #5c2a36; }
+.app-frame .wizard-steps button[aria-current="step"] > span { background: #5c2a36; color: #fff; }
+.app-frame .wizard-format label input { accent-color: #5c2a36; }
+.app-frame .wizard-format .is-selected { border-color: #c6a36a; background: #fbf5ee; }
+.app-frame .visual-composer .rich-toolbar button[aria-pressed="true"],
+.app-frame .visual-composer .rich-toolbar button:hover { background: #f4e8e7; color: #5c2a36; }
+.app-frame .visual-composer .tiptap blockquote { border-color: #c6a36a; }
+.app-frame .notice-row.unread { background-color: #fbf5ee; }
+.app-frame .member-bottom-nav a[aria-current="page"] { color: #5c2a36; }
+.invitation-logo { display: block; margin: 0 auto 16px; object-fit: contain; }
+.invitation-form-step:not([hidden]) { display: grid; gap: 10px; }
+.invitation-form-step[hidden] { display: none; }
+.invitation-form-step p { font-size: 14px; line-height: 1.6; color: #6d4450; }
+.invitation-form-step > svg { color: #5c2a36; }

@@ -6,20 +6,23 @@ import { requireAdmin } from "@/lib/auth/guards";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
 import type { MembershipStatus, TeamRole } from "@/types/database";
+import { invitationExpiresAt } from "@/lib/auth/invitation";
 
 function field(formData: FormData, name: string) { return String(formData.get(name) ?? "").trim(); }
 
 export async function createInvitation(formData: FormData) {
   const admin = await requireAdmin();
+  if (process.env.INVITATION_CODES_READY !== "true") redirect("/admin/invitations?error=Falta%20activar%20el%20correo%20por%20código%20en%20Supabase.%20No%20se%20envió%20ningún%20enlace");
   const email = field(formData, "email").toLowerCase();
   const fullName = field(formData, "full_name").replace(/\s+/g, " ").slice(0, 100);
   const role = field(formData, "role") as TeamRole;
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || !["member", "editor"].includes(role)) redirect("/admin/invitations?error=Revisa%20el%20correo%20y%20el%20rol");
 
   const service = createAdminClient();
-  const { data: team } = await service.from("teams").select("id").eq("slug", "invencibles-boss").single();
+  const { data: team } = await service.from("teams").select("id").eq("id", admin.teamId).single();
   if (!team) redirect("/admin/invitations?error=No%20encontramos%20el%20equipo");
-  const { data: userPage } = await service.auth.admin.listUsers({ page: 1, perPage: 1000 });
+  const { data: userPage, error: usersError } = await service.auth.admin.listUsers({ page: 1, perPage: 1000 });
+  if (usersError) redirect("/admin/invitations?error=No%20pudimos%20verificar%20la%20cuenta");
   const invitedUser = userPage.users.find((user) => user.email?.toLowerCase() === email);
   if (invitedUser) {
     const { data: existingMembership } = await service.from("memberships").select("id")
@@ -31,13 +34,11 @@ export async function createInvitation(formData: FormData) {
   if (duplicate?.length) redirect("/admin/invitations?error=Ya%20hay%20una%20invitación%20pendiente%20para%20ese%20correo");
 
   const { data: invitation, error: insertError } = await service.from("invitations").insert({
-    team_id: team.id, email, invited_by: admin.userId, role, status: "pending",
+    team_id: team.id, email, invited_by: admin.userId, role, status: "pending", expires_at: invitationExpiresAt(),
   }).select("id").single();
   if (insertError || !invitation) redirect("/admin/invitations?error=No%20pudimos%20crear%20la%20invitación");
 
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
   const { error: inviteError } = await service.auth.admin.inviteUserByEmail(email, {
-    redirectTo: `${siteUrl}/auth/callback?next=/invite/accept`,
     data: { full_name: fullName, invitation_id: invitation.id },
   });
   if (inviteError) {
@@ -50,6 +51,7 @@ export async function createInvitation(formData: FormData) {
 
 export async function resendInvitation(formData: FormData) {
   const admin = await requireAdmin();
+  if (process.env.INVITATION_CODES_READY !== "true") redirect("/admin/invitations?error=Falta%20activar%20el%20correo%20por%20código%20en%20Supabase.%20No%20se%20envió%20ningún%20enlace");
   const invitationId = field(formData, "invitation_id");
   const service = createAdminClient();
   const { data: invitation } = await service.from("invitations").select("id,email,expires_at,status,role")
@@ -59,12 +61,10 @@ export async function resendInvitation(formData: FormData) {
     await service.from("invitations").update({ status: "expired" }).eq("id", invitation.id);
     redirect("/admin/invitations?error=La%20invitación%20venció.%20Crea%20una%20nueva");
   }
-  const expiresAt = new Date(Date.now() + 60 * 60 * 1000).toISOString();
+  const expiresAt = invitationExpiresAt();
   const { error: extendError } = await service.from("invitations").update({ expires_at: expiresAt }).eq("id", invitation.id);
   if (extendError) redirect("/admin/invitations?error=No%20pudimos%20preparar%20el%20reenvío");
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
   const { error } = await service.auth.admin.inviteUserByEmail(invitation.email, {
-    redirectTo: `${siteUrl}/auth/callback?next=/invite/accept`,
     data: { invitation_id: invitation.id },
   });
   if (error) {

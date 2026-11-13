@@ -42,8 +42,8 @@ Estado (2026-11-12): el portal de la socia está en `/app`, `/app/academy`, `/ap
 Aceptación parcial: el acceso a archivos sigue condicionado por membresía y URLs firmadas; el avance es por usuaria y equipo. Faltan pruebas con una segunda socia, una cuenta suspendida y otro equipo.
 
 ### Fase 4 — Comunidad, comentarios y eventos
-Tareas: preguntas, experiencias, comentarios por lección, retos, ejercicios, calendario y notificaciones; activar Realtime donde aporte valor.
-Aceptación: RLS limita lectura/escritura al equipo y autoría/moderación definida; estados vacíos y notificaciones accesibles.
+Estado (2026-11-12): la comunidad, los mensajes, los avisos y la moderación están en local y en la base. `/app/messages` tiene bandeja, directorio, bloqueo y reporte del mensaje. `/app/notifications` y la campana leen avisos creados por disparadores. `/admin/community` resuelve reportes y oculta contenido. Realtime cubre el hilo abierto, los comentarios de la pantalla y la campana. No hay push, correo ni chat de grupo. No hubo push ni deploy de Netlify.
+Aceptación parcial: RLS limita la lectura al equipo y la escritura a la autora de la sesión. Falta probar una segunda socia, una cuenta suspendida y otro equipo.
 
 ### Fase 5 — Mensajería directa y endurecimiento
 Tareas: conversaciones/participantes, políticas exclusivas por participantes, auditoría, rendimiento, accesibilidad y operación.

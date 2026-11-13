@@ -21,7 +21,7 @@ export default async function MemberProfilePage() {
   await connection();
   const db = await createClient();
   const [{ data: profile }, { data: membership }, { data: team }] = await Promise.all([
-    db.from("profiles").select("full_name,avatar_path").eq("id", access.userId).maybeSingle(),
+    db.from("profiles").select("full_name,avatar_path,directory_visible").eq("id", access.userId).maybeSingle(),
     db.from("memberships").select("joined_at").eq("user_id", access.userId).eq("team_id", access.teamId).eq("status", "active").maybeSingle(),
     db.from("teams").select("name").eq("id", access.teamId).maybeSingle(),
   ]);
@@ -37,6 +37,6 @@ export default async function MemberProfilePage() {
     <SettingsField label="Fecha de incorporación" value={formatLearningDate(joinedAt)} hint="Es la fecha en que entraste a este equipo." />
     <SettingsField label="Equipo" value={typeof team?.name === "string" ? team.name : "Invencibles Boss"} hint="El equipo lo asigna la administración." />
     <SettingsField label="Rol" value={roleLabel(access.role)} hint="El rol no se cambia desde el perfil." />
-    <ProfileForm name={name} avatarUrl={avatar?.data?.signedUrl ?? ""} />
+    <ProfileForm name={name} avatarUrl={avatar?.data?.signedUrl ?? ""} directoryVisible={profile?.directory_visible !== false} />
   </main>;
 }
